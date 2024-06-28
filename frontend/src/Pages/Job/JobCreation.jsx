@@ -3,18 +3,27 @@ import Basic from './Job-Creations-Comp/Basic'
 import Additional from './Job-Creations-Comp/Additional'
 import Service from './Job-Creations-Comp/Service'
 import './Style.css'
+import { AddJobs } from '../../ApiCalls/Job'
+import { toast } from 'react-toastify'
 
-const JobCreation = ({settable,setJob}) => {
+const JobCreation = ({settable,setJob,JobDataFetch}) => {
 
     const [basicComp,setBasicComp]=useState(true)
     const [serviceComp,setServiceComp]=useState(false)
     const [additionalComp,setAdditionalComp]=useState(false)
     const [formData,setFormData]=useState({})
 
-    const FormSubmition =()=>{
+    const FormSubmition =async(data)=>{
       try {
-        console.log(formData,"FormDataaaa");
+        console.log(data,"FormDataaaa");
         setJob(false);settable(true)
+        const response = await AddJobs(data)
+        if(response.success){
+          toast.success(`${response.message}`)
+          JobDataFetch();
+        }else{
+          toast.error(`${response.message}`)
+        }
       } catch (error) {
         console.log(error);
       }

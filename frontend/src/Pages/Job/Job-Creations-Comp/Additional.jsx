@@ -29,16 +29,18 @@ const Additional = ({setAdditionalComp,setBasicComp,setServiceComp,FormSubmition
   const onSubmit=()=>{
     try {
     console.log("hhhhhhhhhhh");
-     const Data ={
-      ...formData,
+    const forms ={
       MarkandNumber:MarkandNumber,
       cargoDescription:cargoDescription,
       IgmNumber:IgmNumber,
       IgmDate:IgmDate,
       ContainerData:ContainerData
-     }
+    }
+    console.log(forms,"fffffffffffffffffooooooooooooooooooooooooorrrrrrrrrrrrrrrrrr");
+      const Data ={...formData,...forms}
+      console.log(Data,"abbbbaaa");
      setFormData(Data);
-     FormSubmition();
+     FormSubmition(Data);
     console.log(Data,"Data");
     } catch (error) {
       console.log(error);

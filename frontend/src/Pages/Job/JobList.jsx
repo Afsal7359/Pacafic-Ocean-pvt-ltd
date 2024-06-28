@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import searchicon from '../../assets/img/icons/search-normal.svg';
 import addicon from '../../assets/img/icons/plus.svg';
 import AddJobModal from './AddJobModal';
 import JobCreation from './JobCreation';
+import { GetJobs } from '../../ApiCalls/Job';
 
 const JobList = () => {
 
     const [AddModal,setAddModal]=useState(false)
     const [Jobcreation,setJobcreation]=useState(false)
     const [tableView,setTableView]=useState(true)
+    const [jobData,setJobData]=useState([])
     const handleItemClick=()=>{
       try {
        setJobcreation(true)
@@ -17,6 +19,22 @@ const JobList = () => {
         console.log(error,"error");
       }
     }
+    const JobDataFetch =async()=>{
+      try {
+        const response = await GetJobs();
+        console.log(response,"response");
+        if(response.success){
+          setJobData(response.data)
+        }else{
+          console.log(response.message,"error");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    useEffect(()=>{
+      JobDataFetch();
+    },[])
   return (
     <>
      {tableView&&<div className="row">
@@ -60,7 +78,6 @@ const JobList = () => {
                       <th>Carrier Doc</th>
                       <th>House Doc</th>
                       <th>Customs Doc</th>
-                      <th>Cont No</th>
                       <th>SP Name</th>
                       <th>Origin</th>
                       <th>Destination</th>
@@ -68,47 +85,19 @@ const JobList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                      <tr >
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td>item</td>
-                        <td className="text-end">
-                          <div className="dropdown dropdown-action">
-                            <a
-                              href="#"
-                              className="action-icon dropdown-toggle"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                            >
-                              <i className="fa fa-ellipsis-v"></i>
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-end">
-                              <a  className="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#delete_patients"
-                                >
-                                <i className="fa-solid fa-pen-to-square m-r-5"></i> Edit
-                              </a>
-                              <a
-                              
-                                className="dropdown-item"
-                                data-bs-toggle="modal"
-                                data-bs-target="#delete_patient"
-                              >
-                                <i className="fa fa-trash-alt m-r-5"></i> Delete
-                              </a>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
+                      {jobData&&jobData.map((item,index)=>(
+                        <tr key={index} >
+                            <td>{item.CarrierBookRef}</td>
+                            <td>{item.Date}</td>
+                            <td>{item.CustomerRef}</td>
+                            <td>{item.Customer}</td>
+                            <td>{item.CarrierDoc}</td>
+                            <td>{item.HouseDoc}</td>
+                            <td>{item.CustomsDoc}</td>
+                            <td>{item.SalesPerson}</td>
+                            <td>{item.Origin}</td>
+                            <td>{item.Destination}</td>
+                        </tr>))}
                   </tbody>
                 </table>
               </div>
@@ -116,7 +105,7 @@ const JobList = () => {
             </div>
         </div>}
         {AddModal && <AddJobModal setModal={setAddModal}/>}
-        {Jobcreation && <JobCreation settable={setTableView} setJob={setJobcreation}/>}
+        {Jobcreation && <JobCreation settable={setTableView} setJob={setJobcreation} JobDataFetch={JobDataFetch}/>}
     </>
   )
 }

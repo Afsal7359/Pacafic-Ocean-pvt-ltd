@@ -254,7 +254,54 @@ const Jobschema = new mongoose.Schema({
         },
         tos:{
             type:String
+        },
+        ContainerData:{
+            type:[{
+                agentSeal:{
+                    type:String
+                },
+                cargoWeight:{
+                    type:String
+                },
+                containerNo:{
+                    type:String
+                },
+                containerType:{
+                    type:String
+                },
+                customSeal:{
+                    type:String
+                },
+                netWeight:{
+                    type:String
+                },
+                numberOfUnits:{
+                    type:String
+                },
+                packageType:{
+                    type:String
+                },
+                tareWeight:{
+                    type:String
+                },
+                volumeCo:{
+                    type:String
+                },
+            }]
+        },
+        IgmDate:{
+            type:String
+        },
+        IgmNumber:{
+            type:String
+        },
+        MarkandNumber:{
+            type:String
+        },
+        cargoDescription:{
+            type:String
         }
+
 })
 const Job = mongoose.model('Job',Jobschema);
 module.exports = Job;

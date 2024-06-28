@@ -5,6 +5,7 @@ module.exports={
     AddJob : async(req,res)=>{
         try {
            const Data = req.body
+           console.log(Data,"Dtaa");
            await Job.create(Data)
               const datas = await Job.find().sort({_id:-1});
               res.status(200).json({
