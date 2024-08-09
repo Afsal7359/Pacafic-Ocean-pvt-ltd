@@ -43,6 +43,8 @@ setIsloading(true)
     formData.append('webLink', data.weblink);
     formData.append('gst', data.GSTIN);
     formData.append('panNo', data.PANNO);
+    formData.append('state',data.state);
+    formData.append('statecode',data.statecode);
     formData.append('category', JSON.stringify(Category));
     formData.append('category2', JSON.stringify(Category2));
     if (data.GSTPhoto[0]) formData.append('gstphoto', data.GSTPhoto[0]);
@@ -182,6 +184,30 @@ setIsloading(true)
                               })}
                             />
                             {errors.email2 && <span className="invalid-feedback">{errors.email2.message}</span>}
+                          </div>
+                        </div>
+                        <div  className="col-12 col-md-6 col-xl-6">
+                          <div className="form-group local-forms">
+                            <label>State</label>
+                            <input
+                              type="text"
+                              {...register("state", { required: true })}
+                              className={`form-control ${errors.state ? 'is-invalid' : ''}`}
+                           
+                            />
+                            {errors.state && <span className="invalid-feedback">This field is required</span>}
+                          </div>
+                        </div>
+                        <div  className="col-12 col-md-6 col-xl-6">
+                          <div className="form-group local-forms">
+                            <label>State Code</label>
+                            <input
+                              type="text"
+                              {...register("statecode", { required: true })}
+                              className={`form-control ${errors.statecode ? 'is-invalid' : ''}`}
+                           
+                            />
+                            {errors.statecode && <span className="invalid-feedback">This field is required</span>}
                           </div>
                         </div>
                     {['Transporter', 'Vender', 'Customer', 'Airline', 'CHA', 'Others'].map((label, index) => (

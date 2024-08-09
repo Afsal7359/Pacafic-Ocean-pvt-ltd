@@ -23,6 +23,8 @@ module.exports={
                 gstphoto: gstImageResult ? gstImageResult.secure_url : null,
                 panphoto: panImageResult ? panImageResult.secure_url : null,
                 gst: data.gst,
+                state:data.state,
+                statecode:data.statecode,
                 panNo: data.panNo,
                 category:category,
                 category2:category2,
@@ -63,18 +65,18 @@ module.exports={
     },
     DeleteParties: async(req,res)=>{
         try {
-            const id = req.params;
-            if (Deletedata) {
-                const publicIdgst = Deletedata.gstphoto.split('/').pop().split('.')[0];
-                const publicIdpan = Deletedata.panphoto.split('/').pop().split('.')[0];
+            const id = req.params.id;
+            // if (Deletedata) {
+            //     const publicIdgst = Deletedata.gstphoto.split('/').pop().split('.')[0];
+            //     const publicIdpan = Deletedata.panphoto.split('/').pop().split('.')[0];
         
-                const [destroyResult, destroyResult2] = await Promise.all([
-                    cloudinary.uploader.destroy(publicIdgst),
-                    cloudinary.uploader.destroy(publicIdpan)
-                ]);
-            }
+            //     const [destroyResult, destroyResult2] = await Promise.all([
+            //         cloudinary.uploader.destroy(publicIdgst),
+            //         cloudinary.uploader.destroy(publicIdpan)
+            //     ]);
+            // }
           
-                await Parties.findByIdAndDelete(id);
+                await Parties.findByIdAndDelete({_id:id});
                 // const Data= await Parties.find()
                 res.status(200).json({
                     success:true,

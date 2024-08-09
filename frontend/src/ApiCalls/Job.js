@@ -16,3 +16,11 @@ export const GetJobs = async()=>{
         return error.response.data
     }
 }
+export const EditJobApi = async(payload)=>{
+    try {
+        const response = await instance.post(`job/edit-job/${payload._id}`,payload);
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}

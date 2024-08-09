@@ -256,6 +256,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                           {errors.uom && <span className="invalid-feedback">This field is required</span>}
                         </div>
                       </div>
+                    
 
                       <div className="col-12 col-md-6 col-xl-6">
                         <div className="form-group local-forms">
@@ -350,6 +351,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         {errors.RevenupartyType && <span className="invalid-feedback">This field is required</span>}
                       </div>
                     </div>
+                   
                     <div className="col-12 col-md-6 col-xl-6">
                       <div className="form-group local-forms">
                         <label>Party</label>
@@ -413,6 +415,21 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                     </div>
                     <div className="col-12 col-md-6 col-xl-6">
                       <div className="form-group local-forms">
+                        <label>Tax </label>
+                        <select  className={`form-control ${errors.tax ? 'is-invalid' : ''}`}
+                          {...register("tax", { required: true })}>
+                           <option value="">select</option>
+                            <option value="0">0</option>
+                            <option value="5">5 %</option>
+                            <option value="12">12 %</option>
+                            <option value="18">18 %</option>
+                            <option value="28">28 %</option>
+                        </select>
+                        {errors.tax && <span className="invalid-feedback">This field is required</span>}
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-6 col-xl-6">
+                      <div className="form-group local-forms">
                         <label>Remark</label>
                         <input {...register("RevenueRemark")} 
                         type="text" className={`form-control ${errors.RevenueRemark ? 'is-invalid':""} `} />
@@ -460,6 +477,23 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         {errors.CostpartyType && <span className="invalid-feedback">This field is required</span>}
                       </div>
                     </div>
+                    <div className="col-12 col-md-6 col-xl-6">
+                        <div className="form-group local-forms">
+                          <label>Tax</label>
+                          <select
+                            className={`form-control ${errors.tax ? 'is-invalid' : ''}`}
+                            {...register("tax", { required: true })}
+                          >
+                            <option value="">select</option>
+                            <option value="0">0</option>
+                            <option value="5">5 %</option>
+                            <option value="12">12 %</option>
+                            <option value="18">18 %</option>
+                            <option value="28">28 %</option>
+                          </select>
+                          {errors.tax && <span className="invalid-feedback">This field is required</span>}
+                        </div>
+                      </div>
                     <div className="col-12 col-md-6 col-xl-6">
                       <div className="form-group local-forms">
                         <label>Party</label>

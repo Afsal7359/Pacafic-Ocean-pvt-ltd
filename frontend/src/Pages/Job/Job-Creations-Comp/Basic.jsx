@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddRevenueModal from './AddRevenueModal'
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom'
 
 const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formData}) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [AddRevenu,setAddRevenu]=useState(false)
   const [RevenueData,setRevenueData]=useState([])
   const [CostData,setCostData]=useState([]);
-
+ 
   const handleDelete = (index) => {
     const newRevenueData = RevenueData.filter((item, i) => i !== index);
     setRevenueData(newRevenueData);

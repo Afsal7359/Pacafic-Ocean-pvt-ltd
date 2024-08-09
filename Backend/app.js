@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const partiesRouter = require('./route/partiesRoute');
 const Currency = require('./route/CurrencyRoute');
 const Job = require('./route/Job');
+const Employee = require('./route/Employee')
+const Admin = require('./route/SuperAdmin')
 
 dotenv.config()
 
@@ -36,6 +38,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/parties',partiesRouter)
 app.use('/api/currency',Currency);
 app.use('/api/job', Job);
+app.use('/api/employee',Employee)
+app.use('/api/admin',Admin)
 
 mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log("Database connected");

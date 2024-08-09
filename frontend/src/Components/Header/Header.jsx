@@ -15,14 +15,14 @@ const Header = () => {
    <Logo/>
     <a id="toggle_btn" href="javascript:void(0);"><img src={menu1}  alt=""/></a>
     <a id="mobile_btn" className="mobile_btn float-start" href="#sidebar"><img src={menu2}  alt=""/></a>
-    <div className="top-nav-search mob-view">
+    {/* <div className="top-nav-search mob-view">
         <form>
             <input type="text" className="form-control" placeholder="Search here"/>
             <a className="btn" ><img src={search} alt=""/></a>
         </form>
-    </div>
+    </div> */}
     <ul className="nav user-menu float-end">
-        <li className="nav-item dropdown d-none d-md-block">
+        {/* <li className="nav-item dropdown d-none d-md-block">
             <a href="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown"><img src={book} alt=""/><span className="pulse"></span> </a>
             <div className="dropdown-menu notifications">
                 <div className="topnav-dropdown-header">
@@ -96,16 +96,16 @@ const Header = () => {
         </li>
         <li className="nav-item dropdown d-none d-md-block">
             <a href="javascript:void(0);" id="open_msg_box" className="hasnotifications nav-link"><img src={notification} alt=""/><span className="pulse"></span> </a>
-        </li>
+        </li> */}
         <li className="nav-item dropdown has-arrow user-profile-list">
             <a href="#" className="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
                 <div className="user-names">
-                    <h5>shahid </h5>
-                    <span>Admin</span>
+                    {/* <h5>shahid </h5> */}
+                    {/* <span>Admin</span> */}
                 </div>
-                <span className="user-img">
+                {/* <span className="user-img">
                     <img  src={user}alt="Admin"/>
-                </span>
+                </span> */}
             </a>
             <div className="dropdown-menu">
                 <a className="dropdown-item" href="profile.html">My Profile</a>
@@ -114,11 +114,11 @@ const Header = () => {
                 <a className="dropdown-item" href="login.html">Logout</a>
             </div>
         </li>
-        <li className="nav-item ">
+        {/* <li className="nav-item ">
             <a href="settings.html"  className="hasnotifications nav-link"><img src={settings} alt=""/> </a>
-        </li>
+        </li> */}
     </ul>
-    <div className="dropdown mobile-user-menu float-end">
+    {/* <div className="dropdown mobile-user-menu float-end">
         <a href="#" className="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="fa-solid fa-ellipsis-vertical"></i></a>
         <div className="dropdown-menu dropdown-menu-end">
             <a className="dropdown-item" href="profile.html">My Profile</a>
@@ -126,7 +126,7 @@ const Header = () => {
             <a className="dropdown-item" href="settings.html">Settings</a>
             <a className="dropdown-item" href="login.html">Logout</a>
         </div>
-    </div>
+    </div> */}
 </div>
     </div>
   )

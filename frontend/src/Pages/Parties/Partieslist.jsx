@@ -13,7 +13,7 @@ const Partieslist = () => {
 
     const PartiesDataFetch = async()=>{
       try {
-        if(isloading){
+    
           const response = await GetAllParties();
           if(response.success){
             setParties(response.data)
@@ -21,7 +21,7 @@ const Partieslist = () => {
           }else{
             toast.error("Network Error Please Check Your connection and Reload the Page")
           }
-        }
+        
         
       } catch (error) {
         console.log(error);
@@ -39,8 +39,10 @@ const Partieslist = () => {
         if(response.success){
           toast.success(`${response.message}`)
           PartiesDataFetch()
+          setIsloading(false)
         }else{
           toast.error(`${response.message}`)
+          setIsloading(false)
         }
       } catch (error) {
         console.log(error);
@@ -126,11 +128,11 @@ const Partieslist = () => {
                               <i className="fa fa-ellipsis-v"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-end">
-                              <a  className="dropdown-item" data-bs-toggle="modal"
+                              {/* <a  className="dropdown-item" data-bs-toggle="modal"
                                 data-bs-target="#delete_patients"
                                 >
                                 <i className="fa-solid fa-pen-to-square m-r-5"></i> Edit
-                              </a>
+                              </a> */}
                               <a
                               
                                 className="dropdown-item"

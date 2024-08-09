@@ -40,13 +40,13 @@ const Jobschema = new mongoose.Schema({
                 type:String
             },
             CostExRate:{
-                type:Number
+                type:String
             },
             CostFcGrossAmt:{
-                type:Number
+                type:String
             },
             CostLcAmount:{
-                type:Number
+                type:String
             },
             CostRemark:{
                 type:String
@@ -61,7 +61,10 @@ const Jobschema = new mongoose.Schema({
                 type:String
             },
             NetLc:{
-                type:Number
+                type:String
+            },
+            tax:{
+                type:String
             },
             code:{
                 type:String
@@ -164,18 +167,24 @@ const Jobschema = new mongoose.Schema({
         RevenueData:{
             type:[{
                 NetLc:{
-                    type:Number
+                    type:String
+                },
+                tax:{
+                    type:String
                 },
                 RevenueCurrency:{
                     type:String
                 },
                 RevenueExRate:{
-                    type:Number
+                    type:String
                 },
                 RevenueLcAmount:{
-                    type:Number
+                    type:String
                 },
                 RevenueRemark:{
+                    type:String
+                },
+                RevenuFcGrossAmt:{
                     type:String
                 },
                 Revenuparty:{
@@ -255,6 +264,18 @@ const Jobschema = new mongoose.Schema({
         tos:{
             type:String
         },
+        IgmDate:{
+            type:String
+        },
+        IgmNumber:{
+            type:String
+        },
+        MarkandNumber:{
+            type:String
+        },
+        cargoDescription:{
+            type:String
+        },
         ContainerData:{
             type:[{
                 agentSeal:{
@@ -289,18 +310,7 @@ const Jobschema = new mongoose.Schema({
                 },
             }]
         },
-        IgmDate:{
-            type:String
-        },
-        IgmNumber:{
-            type:String
-        },
-        MarkandNumber:{
-            type:String
-        },
-        cargoDescription:{
-            type:String
-        }
+      
 
 })
 const Job = mongoose.model('Job',Jobschema);

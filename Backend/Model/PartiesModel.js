@@ -16,6 +16,16 @@ const partiesSchema =new mongoose.Schema({
         require:true,
         trim:true,
     },
+    state:{
+        type:String,
+        require:true,
+        trim:true
+    },
+    statecode:{
+        type:String,
+        require:true,
+        trim:true
+    },
     number2:{
         type:Number,
         trim:true,

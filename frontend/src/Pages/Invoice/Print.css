@@ -1,0 +1,220 @@
+/* Print.css */
+@media print {
+  
+  
+    .abcd {
+      /* Ensure this class is styled correctly for print */
+      color: black;
+      font-size: 16px;
+      /* Add any other print-specific styles here */
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  
+
+
+.abcd {
+   
+    background-color: #fff;
+}
+.container {
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #fff;
+    background-color: #fff;
+  
+}
+/* .headers {
+    text-align: center;
+} */
+.headers img {
+    width: 100px;
+    vertical-align: middle;
+}
+.headers h1 {
+    display: inline;
+    font-size: 28px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #008083;
+}
+.invoice-title {
+    background-color: #005f95;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+.section {
+    margin: 20px 0px 20px 0px;
+}
+.shipment-deatsils {
+    height: 25px;
+    width: 100%;
+    background-color: #005f95;
+    display: flex;
+    padding: 5px 0px 5px 5px ;
+    justify-content: center;
+}
+.shipmenttext {
+    color: white;
+    font-size: small;
+    font-weight: 700;
+}
+
+.section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.section th, .section td {
+    border: 1px solid #000;
+}
+.section th {
+    background-color: #f2f2f2;
+}
+/* .details, .billing {
+    /* width: 48%; */
+    /* display: inline-block; */
+
+.details {
+    margin-right: 4%;
+}
+.billing {
+    margin-left: 4%;
+}
+.flex-container {
+    display: flex;
+    justify-content: left;
+    gap: 19px;
+    
+}
+.flex-containers {
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+    
+}
+.flex-container-ship{
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid #635f5f;
+}
+.flex-container-ships{
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 9px 0px 9px;
+}
+.shpmtrightside{
+    display: flex;
+    justify-content: space-around;
+    gap: 38px;
+}
+.lefttext{
+    font-size: x-small;
+    color: #000;
+    height: 8px;
+    width: 125%;
+}
+.spanleftetxt{
+    color: #000;
+    padding-left: 10px;
+}
+.borderss {
+    border: 1px solid #635f5f;
+    font-size:x-small;
+}
+.font-mbl {
+    font-weight:800;
+    color: #000;
+}
+table {
+    width: 100%;
+}
+th, td {
+    border: 1px solid #000;
+    text-align: right;
+    font-size: xx-small;
+}
+th {
+    background-color: #0b57a4;
+    color: #fff;
+    font-size: xx-small;
+}
+.description {
+    text-align: left;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th {
+   border: none;
+    border-bottom: 0px solid #ac2020;
+    border-right: 1px solid #fff;;
+    padding: 8px;
+    text-align: left;
+  }
+  td {
+    border: 0px solid #fff; /* Adjust as needed */
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Remove any default border from the right side of the first column */
+  thead tr th:first-child {
+    border-right: none !important;
+  }
+
+  @page {
+    margin: 20mm;
+  }
+  
+  @media print {
+    /* body {
+      -webkit-print-color-adjust: exact;
+    } */
+    
+    .print-header {
+      display: block;
+      position: relative;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  
+    .print-header h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+  
+    .print-header img {
+      width: 19%;
+      height: auto;
+      margin: 10px 0;
+    }
+  
+    /* .print-section {
+      page-break-before: always;
+    }
+  
+    .section,
+    .shipment-deatsils,
+    .table-container {
+      page-break-inside: avoid;
+    } */
+  
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    .borderss {
+      border-bottom: 1px solid #000;
+    }
+  }

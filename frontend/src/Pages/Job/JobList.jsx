@@ -4,6 +4,7 @@ import addicon from '../../assets/img/icons/plus.svg';
 import AddJobModal from './AddJobModal';
 import JobCreation from './JobCreation';
 import { GetJobs } from '../../ApiCalls/Job';
+import {Link} from 'react-router-dom'
 
 const JobList = () => {
 
@@ -48,7 +49,9 @@ const JobList = () => {
                         <h3>Job List</h3>
                         <div className="doctor-search-blk">
                           <div className="top-nav-search table-search-blk">
-                            <form onClick={()=>{setAddModal(true)}}>
+                            <form 
+                            // onClick={()=>{setAddModal(true)}}
+                            >
                               <input type="text" className="form-control" placeholder="Search here" />
                               <a className="btn" >
                                 <img src={searchicon} alt="" />
@@ -71,6 +74,7 @@ const JobList = () => {
                 <table className="table border-0 custom-table comman-table datatable mb-0">
                   <thead>
                     <tr>
+                      <th>Action</th>
                       <th>Book Ref.</th>
                       <th>Book Date</th>
                       <th>Customer Ref.</th>
@@ -81,12 +85,41 @@ const JobList = () => {
                       <th>SP Name</th>
                       <th>Origin</th>
                       <th>Destination</th>
-                      <th>Quotation</th>
                     </tr>
                   </thead>
                   <tbody>
                       {jobData&&jobData.map((item,index)=>(
                         <tr key={index} >
+                           <td className="text-end">
+                          <div className="dropdown dropdown-action">
+                            <a
+                              href="#"
+                              className="action-icon dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                             
+                            >
+                              <i className="fa fa-ellipsis-v"></i>
+                            </a>
+                            <div className="dropdown-menu dropdown-menu-end">
+                              <Link  className="dropdown-item" 
+                                to={'/edit-job'}
+                                state={item}
+                                >
+                                <i className="fa-solid fa-pen-to-square m-r-5"></i> Edit
+                              </Link>
+                              <a
+                              
+                                className="dropdown-item"
+                                data-bs-toggle="modal"
+                                data-bs-target="#delete_patient"
+                                // onClick={()=>handleDeleteClick(item._id)}
+                              >
+                                <i className="fa fa-trash-alt m-r-5"></i> Delete
+                              </a>
+                            </div>
+                          </div>
+                        </td>
                             <td>{item.CarrierBookRef}</td>
                             <td>{item.Date}</td>
                             <td>{item.CustomerRef}</td>
