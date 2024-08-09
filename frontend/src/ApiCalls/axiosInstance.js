@@ -1,7 +1,7 @@
 import axios  from 'axios'
 
 const instance =axios.create({
-    baseURL:"http://localhost:4011/api/"
+    baseURL:"https://pacafic-ocean-pvt-ltd.onrender.com/api/"
 })
 
 export default instance;    
