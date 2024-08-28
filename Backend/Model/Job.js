@@ -25,6 +25,9 @@ const Jobschema = new mongoose.Schema({
     Commodity:{
         type:String
     },
+    Vessel:{
+        type:String
+    },
     Container20ft:{
         type:String
     },

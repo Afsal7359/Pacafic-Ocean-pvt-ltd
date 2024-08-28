@@ -93,12 +93,11 @@ const Partieslist = () => {
                     <tr>
                       <th>Name</th>
                       <th>Address Number</th>
-                      <th>Gst In</th>
-                      <th>PanNo</th>
+                      <th>NPWP</th>
                       <th>Contact No</th>
                       <th>Email</th>
-                      <th>Pan Image</th>
-                      <th>Gst Image</th>
+                      {/* <th>Pan Image</th> */}
+                      <th>NPWP Image</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -107,12 +106,11 @@ const Partieslist = () => {
                         <td>{index+1}</td>
                         <td>{item.name}</td>
                         <td>{item.gst}</td>
-                        <td>{item.panNo}</td>
                         <td>{item.number1}</td>
                         {/* <td>{item.email1}</td> */}
-                        <td>
+                        {/* <td>
                           <img src={item.panphoto} alt="pan-img" height={45} width={45} />
-                         </td>
+                         </td> */}
                          <td>
                           <img src={item.gstphoto} alt="gst-img" height={45} width={45} />
                          </td>

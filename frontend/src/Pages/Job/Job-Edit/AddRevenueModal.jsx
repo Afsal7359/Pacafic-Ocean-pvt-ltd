@@ -348,12 +348,10 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         <select  className={`form-control ${errors.RevenupartyType ? 'is-invalid' : ''}`}
                           {...register("RevenupartyType", { required: true })}>
                           <option value="">select</option>
-                          <option value="Transporter">Transporter</option>
-                          <option value="Vender">Vender</option>
-                          <option value="Customer">Customer</option>
-                          <option value="Airline">Airline</option>
-                          <option value="CHA">CHA</option>
-                          <option value="Other">Other</option>
+                          <option value="shipper">Shipper</option>
+                          <option value="Trader">Trader</option>
+                          <option value="EMKL">EMKL</option>
+                          <option value="Others">Others</option>
                         </select>
                         {errors.RevenupartyType && <span className="invalid-feedback">This field is required</span>}
                       </div>
@@ -426,11 +424,9 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         <select  className={`form-control ${errors.tax ? 'is-invalid' : ''}`}
                           {...register("tax", { required: true })}>
                            <option value="">select</option>
-                            <option value="0">0</option>
-                            <option value="5">5 %</option>
-                            <option value="12">12 %</option>
-                            <option value="18">18 %</option>
-                            <option value="28">28 %</option>
+                           <option value="0">0 %</option>
+                            <option value="1.1">1.1 %</option>
+                            <option value="11">11 %</option>
                         </select>
                         {errors.tax && <span className="invalid-feedback">This field is required</span>}
                       </div>
@@ -474,12 +470,10 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         <select  className={`form-control ${errors.CostpartyType ? 'is-invalid' : ''}`}
                           {...register("CostpartyType", { required: true })}>
                           <option value="">select</option>
-                          <option value="Transporter">Transporter</option>
-                          <option value="Vender">Vender</option>
-                          <option value="Customer">Customer</option>
-                          <option value="Airline">Airline</option>
-                          <option value="CHA">CHA</option>
-                          <option value="Other">Other</option>
+                          <option value="shipper">Shipper</option>
+                          <option value="Trader">Trader</option>
+                          <option value="EMKL">EMKL</option>
+                          <option value="Others">Others</option>
                         </select>
                         {errors.CostpartyType && <span className="invalid-feedback">This field is required</span>}
                       </div>
@@ -492,11 +486,9 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                             {...register("tax", { required: true })}
                           >
                             <option value="">select</option>
-                            <option value="0">0</option>
-                            <option value="5">5 %</option>
-                            <option value="12">12 %</option>
-                            <option value="18">18 %</option>
-                            <option value="28">28 %</option>
+                            <option value="0">0 %</option>
+                            <option value="1.1">1.1 %</option>
+                            <option value="11">11 %</option>
                           </select>
                           {errors.tax && <span className="invalid-feedback">This field is required</span>}
                         </div>

@@ -854,7 +854,7 @@ console.log(groupedItems,"groupitem");
 
     <div className='flex-container-ships' style={{border:"1px solid #000"}}>
       <div  style={{fontSize:"x-small"}}>
-        <div className='pt-4'> <strong>In Words  </strong> {toWords(netTotal)} ONLY</div>
+        <div className='pt-4'> <strong>In Words  </strong> {(netTotal)} ONLY</div>
       </div>
           <div className='pt-2' style={{fontSize:"x-small"}}>
           <strong>  <div>Total Invoice : {netTotal} INR</div>

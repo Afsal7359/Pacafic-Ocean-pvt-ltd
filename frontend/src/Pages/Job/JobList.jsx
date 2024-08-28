@@ -120,16 +120,16 @@ const JobList = () => {
                             </div>
                           </div>
                         </td>
-                            <td>{item.CarrierBookRef}</td>
-                            <td>{item.Date}</td>
-                            <td>{item.CustomerRef}</td>
-                            <td>{item.Customer}</td>
-                            <td>{item.CarrierDoc}</td>
-                            <td>{item.HouseDoc}</td>
-                            <td>{item.CustomsDoc}</td>
-                            <td>{item.SalesPerson}</td>
-                            <td>{item.Origin}</td>
-                            <td>{item.Destination}</td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.CarrierBookRef}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.Date}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.CustomerRef}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.Customer}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.CarrierDoc}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.HouseDoc}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.CustomsDoc}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.SalesPerson}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.Origin}</Link></td>
+                            <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.Destination}</Link></td>
                         </tr>))}
                   </tbody>
                 </table>

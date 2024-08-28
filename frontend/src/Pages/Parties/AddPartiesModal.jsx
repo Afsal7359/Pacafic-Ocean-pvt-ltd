@@ -41,14 +41,14 @@ setIsloading(true)
     formData.append('email2', data.email2);
     formData.append('representative', data.RepresentativeName);
     formData.append('webLink', data.weblink);
-    formData.append('gst', data.GSTIN);
-    formData.append('panNo', data.PANNO);
+    formData.append('gst', data.NPWP);
+    // formData.append('panNo', data.PANNO);
     formData.append('state',data.state);
     formData.append('statecode',data.statecode);
     formData.append('category', JSON.stringify(Category));
     formData.append('category2', JSON.stringify(Category2));
     if (data.GSTPhoto[0]) formData.append('gstphoto', data.GSTPhoto[0]);
-    if (data.PANPhoto[0]) formData.append('panphoto', data.PANPhoto[0]);
+    // if (data.PANPhoto[0]) formData.append('panphoto', data.PANPhoto[0]);
 
     console.log('Form Data:', formData);
     
@@ -102,10 +102,10 @@ setIsloading(true)
                     <div className="row">
                       <div className="col-12">
                         <div className="form-heading">
-                          <h4>New Job</h4>
+                          <h4>New Parties</h4>
                         </div>
                       </div>
-                      {['Name', 'Address', 'GSTIN', 'PANNO', 'RepresentativeName'].map((label, index) => (
+                      {['Name', 'Address', 'NPWP', 'RepresentativeName'].map((label, index) => (
                         <div key={index} className="col-12 col-md-6 col-xl-6">
                           <div className="form-group local-forms">
                             <label>{label}</label>
@@ -118,6 +118,7 @@ setIsloading(true)
                           </div>
                         </div>
                       ))}
+                      
                           <div  className="col-12 col-md-6 col-xl-6">
                           <div className="form-group local-forms">
                             <label>Website Link</label>
@@ -238,16 +239,16 @@ setIsloading(true)
                     )}
                         <div className="col-12 col-md-6 col-xl-6">
                         <div className="form-group local-forms">
-                          <label>GST Photo</label>
+                          <label>NPWP Photo</label>
                           <input type="file" style={{borderRadius:"10px",border:"3px solid #EEEEEE",width:"100%"}} {...register('GSTPhoto')} required/>
                         </div>
                       </div>
-                      <div className="col-12 col-md-6 col-xl-6">
+                      {/* <div className="col-12 col-md-6 col-xl-6">
                         <div className="form-group local-forms">
                           <label>PAN Photo</label>
                           <input type="file" style={{borderRadius:"10px",border:"3px solid #EEEEEE",width:"100%"}} {...register('PANPhoto')} required />
                         </div>
-                      </div>
+                      </div> */}
                       {['WCA', 'JC_TRANS', 'DL_ALLIANCE', 'GLN', 'PPL'].map((label, index) => (
                       <div key={index} className="col-2 col-md-3 col-xl-2 d-flex align-items-center">
                         <div className="form-group local-forms">

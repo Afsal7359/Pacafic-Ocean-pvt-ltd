@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/pollogo.png'
 import { AdminLogin } from '../../ApiCalls/Login';
 import { toast } from 'react-toastify';
-import bgimage from '../../assets/img/video/background.gif'
+import bgimage from '../../assets/img/video/bgimg11.gif'
 
 const Admin = () => {
     const [showPassword, setShowPassword] = useState(false);

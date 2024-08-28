@@ -99,6 +99,7 @@ const Invoice = () => {
                   </div>
                 </div>
               </div>
+             <i><p style={{paddingLeft:"20px",color:"red"}}>Please select the party before the Print</p></i> 
               <div className="table-responsive">
                 <table className="table border-0 custom-table comman-table datatable mb-0">
                   <thead>

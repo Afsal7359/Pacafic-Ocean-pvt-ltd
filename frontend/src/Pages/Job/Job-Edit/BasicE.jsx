@@ -130,8 +130,11 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             <select {...register("BookingSource")} 
                              className={`form-control ${errors.BookingSource ? "is-invalid":""}`}>
                             <option value={item.BookingSource} >{item.BookingSource}</option>
-                            <option value="Local">Local</option>
-                            <option value="SVC Partner">SVC Partner</option>
+                            <option value="EMKL">EMKL</option>
+                            <option value="TRADER">TRADER</option>
+                            <option value="Direct Shipper">Direct Shipper</option>
+                            <option value="Nrocc">Nrocc</option>
+                            <option value="soc">soc</option>
                           </select>
                           {errors.BookingSource  && <span className="invalid-feedback">Booking Source is Required</span>}
                           </div>
@@ -217,6 +220,16 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                               <option value="Mumbai">Mumbai</option>
                               <option value="Coimbatore">Coimbatore</option>
                               <option value="Tuticorin">Tuticorin</option>
+                              <option value="Surabaya">Surabaya</option>
+                              <option value="Semarang">Semarang</option>
+                              <option value="Jakarta">Jakarta</option>
+                              <option value="Belawan">Belawan</option>
+                              <option value="Pontianak">Pontianak</option>
+                              <option value="Palembang">Palembang</option>
+                              <option value="Jambi">Jambi</option>
+                              <option value="Kalimnthan">Kalimnthan</option>
+                              <option value="Dumai">Dumai</option>
+                              <option value="Bali">Bali</option>
                             </select>
                             {errors.OfficeLocation && <span className="invalid-feedback">Office Location is Required</span>}
                           </div>
@@ -271,6 +284,34 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                         </div>
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
+                          <label>Load Port</label>
+                            <select 
+                               {...register("LoadPort", { required: true })} 
+                               onChange={(e) => handleChange("LoadPort", e.target.value)}
+                              className={`form-control ${errors.LoadPort ? "is-invalid" : ""}`}
+                            >
+                              <option value="">Select</option>
+                              <option value="Cochin">Cochin</option>
+                              <option value="Chennai">Chennai</option>
+                              <option value="Mumbai">Mumbai</option>
+                              <option value="Coimbatore">Coimbatore</option>
+                              <option value="Tuticorin">Tuticorin</option>
+                              <option value="Surabaya">Surabaya</option>
+                              <option value="Semarang">Semarang</option>
+                              <option value="Jakarta">Jakarta</option>
+                              <option value="Belawan">Belawan</option>
+                              <option value="Pontianak">Pontianak</option>
+                              <option value="Palembang">Palembang</option>
+                              <option value="Jambi">Jambi</option>
+                              <option value="Kalimnthan">Kalimnthan</option>
+                              <option value="Dumai">Dumai</option>
+                              <option value="Bali">Bali</option>
+                            </select>
+                            {errors.LoadPort && <span className="invalid-feedback">Load Port is Required</span>}
+                          </div>
+                        </div>
+                        {/* <div className="col-12 col-md-3 col-xl-3">
+                          <div className="form-group local-forms">
                             <label>Load Port</label>
                             <input 
                               {...register("LoadPort", { required: true })} 
@@ -280,7 +321,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             />
                             {errors.LoadPort && <span className="invalid-feedback">Load Port is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Disch Port</label>
@@ -436,6 +477,18 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                               className={`form-control ${errors.Commodity ? "is-invalid" : ""}`} 
                             />
                             {errors.Commodity && <span className="invalid-feedback">Commodity is Required</span>}
+                          </div>
+                        </div>
+                        <div className="col-12 col-md-3 col-xl-3">
+                          <div className="form-group local-forms">
+                            <label>Vessel Name</label>
+                            <input 
+                              {...register("Vessel", { required: true })} 
+                              onChange={(e) => handleChange("Vessel", e.target.value)}
+                              type="text" 
+                              className={`form-control ${errors.Vessel ? "is-invalid" : ""}`} 
+                            />
+                            {errors.Vessel && <span className="invalid-feedback">Vessel Name is Required</span>}
                           </div>
                         </div>
                         <div className="col-12 col-md-3 col-xl-3">
