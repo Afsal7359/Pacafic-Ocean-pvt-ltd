@@ -47,13 +47,17 @@ const AddContainer = ({item,setItem}) => {
                                 {...register("containerType", { required: true })}
                               >
                                 <option value="">Select</option>
-                                <option value="20G0(20GP)">20G0(20GP)</option>
-                                <option value="20G1(20GP)">20G1(20GP)</option>
-                                <option value="20H0(20HR)">20H0(20HR)</option>
-                                <option value="20T0(20TK)">20T0(20TK)</option>
-                                <option value="22B0(20BU)">22B0(20BU)</option>
-                                <option value="22G0(20GP)">22G0(20GP)</option>
-                                <option value="202G1(20GP)">202G1(20GP)</option>
+                                <option value="20FT">20FT</option>
+                                <option value="40STD">40STD</option>
+                                <option value="40HC">40HC</option>
+                                <option value="20FR">20FR</option>
+                                <option value="40FR">40FR</option>
+                                <option value="45GP">45GP</option>
+                                <option value="20OT">20OT</option>
+                                <option value="40OT">40OT</option>
+                                <option value="20RF">20RF</option>
+                                <option value="40RF">40RF</option>
+                                <option value="ISO TANK">ISO TANK</option>
                               </select>
                               {errors.containerType && <span className="text-danger">This field is required</span>}
                             </div>

@@ -133,7 +133,7 @@ const Additional = ({setAdditionalComp,setBasicComp,setServiceComp,FormSubmition
                                 <option value="40OT">40OT</option>
                                 <option value="20RF">20RF</option>
                                 <option value="40RF">40RF</option>
-                                <option value="ISO TANK">ISO TANK</option>
+                                <option value="ISO TANK">ISO TANK</option>
                               </select>
                               {errors.containerType && <span className="text-danger">This field is required</span>}
                             </div>

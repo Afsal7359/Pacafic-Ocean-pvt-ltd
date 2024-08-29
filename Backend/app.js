@@ -15,15 +15,20 @@ dotenv.config()
 
 const port = process.env.PORT;
 app.use(express.json());
+// const corsOptions = {
+//   origin: [
+//       'http://localhost:4111'
+//   ],
+//   methods: ['GET', 'POST'],
+//   preflightContinue: true, 
+// };
 const corsOptions = {
-  origin: [
-      'http://localhost:4111'
-  ],
-  methods: ['GET', 'POST'],
-  preflightContinue: true, 
+  origin: 'https://billing.pacificoceanlogistik.com',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // If your requests include cookies or authentication
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(morgan('dev'))
 
