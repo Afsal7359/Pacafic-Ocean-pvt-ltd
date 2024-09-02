@@ -22,14 +22,9 @@ app.use(express.json());
 //   methods: ['GET', 'POST'],
 //   preflightContinue: true, 
 // };
-const corsOptions = {
-  origin: 'https://billing.pacificoceanlogistik.com',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // If your requests include cookies or authentication
-};
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+
+
 
 
 app.use(morgan('dev'))
