@@ -313,6 +313,10 @@ const Jobschema = new mongoose.Schema({
                 },
             }]
         },
+        isBlocked: { 
+           type: Boolean,
+            default: false 
+        },
       
 
 })

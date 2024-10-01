@@ -1,15 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import alerticon from '../../assets/img/sent.png'
 import { useForm } from 'react-hook-form';
-import { AddParties } from '../../ApiCalls/Parties.js';
+import { AddParties, EditParties } from '../../ApiCalls/Parties.js';
 import { toast } from 'react-toastify';
 
-const AddPartiesModal = ({ setModal ,setParties}) => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+const EditPartiesModal = ({ setModal ,partyData,PartiesDataFetch}) => {
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
   const [isOthersChecked, setIsOthersChecked] = useState(false);
   const [category,setCategory]=useState([])
   const [category2,setCategory2]=useState([])
   const [isloading,setIsloading]=useState(false) 
+
+  useEffect(() => {
+    if (partyData) {
+      // Set the initial values if editing
+      setValue('Name', partyData.name);
+      setValue('Address', partyData.address);
+      setValue('number1', partyData.number1);
+      setValue('number2', partyData.number2);
+      setValue('email1', partyData.email1);
+      setValue('email2', partyData.email2);
+      setValue('RepresentativeName', partyData.representative);
+      setValue('weblink', partyData.webLink);
+      setValue('NPWP', partyData.gst);
+      setValue('state', partyData.state);
+      setValue('statecode', partyData.statecode);
+
+      // Pre-check categories if they exist
+      if (partyData.category) {
+        partyData.category.forEach(cat => setValue(cat.name, true));
+        setIsOthersChecked(partyData.category.some(cat => cat.name === 'Others'));
+      }
+      if (partyData.category2) {
+        partyData.category2.forEach(cat => setValue(cat.name, true));
+      }
+    }
+  }, [partyData]);
+
   const onSubmit = async (data) => {
 console.log(data);
 setIsloading(true)
@@ -52,23 +79,23 @@ setIsloading(true)
 
     console.log('Form Data:', formData);
     
-    try {
-      const response = await AddParties(formData);
-      if (response.success) {
-        toast.success(`${response.message}`);
-        setParties(response.data);
-        setModal(false)
-      } else {
-        console.log(response);
-      }
-      setIsloading(false)
-      console.log('Parties data success:', response.datas);
-    } catch (error) {
-      toast.error('Error submitting form');
-      console.error('Error submitting form:', error);
+   try {
+    console.log(data,"datatata");
+    const response = await EditParties(formData,partyData._id);
+    if(response.success){
+        setIsloading(false);
+        setModal(false);
+        console.log(response,"suss");
+        PartiesDataFetch();
+    }else{
+        console.log(response,"errr");
+        
     }
-  };
-
+   } catch (error) {
+    console.log(error);
+    
+   }
+  }
   const handleOthersChange = (event) => {
     setIsOthersChecked(event.target.checked);
   };
@@ -285,4 +312,4 @@ setIsloading(true)
         )
 };
 
-export default AddPartiesModal;
+export default EditPartiesModal;

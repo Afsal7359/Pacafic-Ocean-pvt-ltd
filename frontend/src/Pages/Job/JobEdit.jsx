@@ -29,8 +29,8 @@ const JobEdit = () => {
             const response = await EditJobApi(item);
             if(response.success){
               toast.success(`${response.message}`)
-              navigate('/job');
-              console.log(response);
+              navigate('/');
+              console.log(response);  
             }else{
               toast.error(`${response.error}`)
               console.log(response,"res");

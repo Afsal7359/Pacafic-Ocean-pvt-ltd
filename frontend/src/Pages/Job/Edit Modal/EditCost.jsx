@@ -3,174 +3,185 @@ import { GetAllCurrency } from '../../../ApiCalls/Currency';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 
-const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueData}) => {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+const EditCost = ({setModal,setCostData,setRevenueData,CostData,RevenueData,item,index}) => {
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [showRevenue, setShowRevenue] = useState(true);
     const [showCost, setShowCost] = useState(false);
-    const [Quantity,setQuantity]=useState();
-    const [revenueRate,setRevenueRate]=useState();
-    const [Currency,setCurrency]=useState([])
-    const [excRate,setExcRate]=useState()
-    const [lcAmount,setLcAmount]=useState(0)
-    const [revenueRateco,setRevenueRateCo]=useState();
-    const [Currencyco,setCurrencyco]=useState([])
-    const [excRateco,setExcRateco]=useState()
-    const [lcAmountco,setLcAmountco]=useState(0)
-    const [netLcAmount,setNetLcAmount]=useState();
-    const [fcAmountRevenu,setFCAmountRevenu]=useState()
-    const [fcAmountCost,setFCAmountCost]=useState()
-    const [netLc,setNetLc]=useState(0)
-
+    const [Quantity, setQuantity] = useState();
+    const [revenueRate, setRevenueRate] = useState();
+    const [Currency, setCurrency] = useState([]);
+    const [excRate, setExcRate] = useState();
+    const [lcAmount, setLcAmount] = useState(0);
+    const [revenueRateco, setRevenueRateCo] = useState(0);
+    const [CostRateco, setCostRateCo] = useState();
+    const [Currencyco, setCurrencyco] = useState([]);
+    const [excRateco, setExcRateco] = useState();
+    const [lcAmountco, setLcAmountco] = useState(0);
+    const [netLcAmount, setNetLcAmount] = useState();
+    const [fcAmountRevenu, setFCAmountRevenu] = useState();
+    const [fcAmountCost, setFCAmountCost] = useState();
+    const [netLc, setNetLc] = useState(0);
+  
+    // Prepopulate form fields when editing data
+    useEffect(() => {
+      if (item) {
+        setValue("CostBuyingRate", item.CostBuyingRate);
+        setValue("CostpartyType", item.CostpartyType);
+        setValue("tax", item.tax);
+        setValue("Costparty", item.Costparty);
+        setValue("Costrate",item.Costrate);
+        setValue("CostFcGrossAmt", item.CostFcGrossAmt);
+        setValue("CostExRate", item.CostExRate);
+        setValue("CostCurrency", item.CostCurrency);
+        setValue("CostLcAmount",item.CostLcAmount)
+        setValue("CostRemark",item.CostRemark)
+        // Add other fields as needed
+        setRevenueRate(item.Costrate);
+        setExcRateco(item.CostExRate)
+      }
+  
+      if (item) {
+        setValue("code", item.code);
+        setValue("description", item.description);
+        setValue("uomType", item.uomType);
+        setValue("uom", item.uom);
+        setValue("quantity", item.quantity);
+        setValue("tariffTerm", item.tariffTerm);
+        setQuantity(item.quantity)
+        // Add other fields as needed
+      }
+    }, [CostData, item, setValue]);
+  
     const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
-        if (name === 'revenue') {
-          setShowRevenue(checked);
-        } else if (name === 'cost') {
-          setShowCost(checked);
-        }
-      };
-      const handleCurrencyFetch = async()=>{
-        try {
-          const response = await GetAllCurrency();
-          if(response.success){
-            setCurrency(response.data)
-          }else{
-            toast.error(`${response.message}`)
-          }
-        } catch (error) {
-          console.log(error);
-        }
+      const { name, checked } = e.target;
+      if (name === 'revenue') {
+        setShowRevenue(checked);
+      } else if (name === 'cost') {
+        setShowCost(checked);
       }
-      useEffect(()=>{
-        handleCurrencyFetch();
-      },[])
-      const RevenueCurrencyChange =()=>{
-        try {
-          const lcamounts = (Quantity * revenueRate) * excRate;
-          if(lcamounts){
-            setValue("RevenueLcAmount", lcamounts)
-          }
-          setLcAmount(lcamounts)
-        } catch (error) {
-          console.log(error);
+    };
+  
+    const handleCurrencyFetch = async () => {
+      try {
+        const response = await GetAllCurrency();
+        if (response.success) {
+          setCurrency(response.data);
+        } else {
+          toast.error(`${response.message}`);
         }
+      } catch (error) {
+        console.log(error);
       }
-      const RevenueCurrencyChangeco =()=>{
-        try {
-          var lcamounts = (Quantity * revenueRateco) * excRateco;
-        if(lcAmountco){
-          setValue("CostLcAmount", lcamounts)
+    };
+  
+    useEffect(() => {
+      handleCurrencyFetch();
+    }, []);
+  
+    const RevenueCurrencyChange = () => {
+      try {
+        const lcamounts = (Quantity * revenueRate) * excRate;
+        if (lcamounts) {
+            setValue("CostLcAmount", lcamounts);
         }
-          setLcAmountco(lcamounts)
-        } catch (error) {
-          console.log(error);
-        }
+        setLcAmount(lcamounts);
+      } catch (error) {
+        console.log(error);
       }
-      const FcAmountREvenuCal =()=>{
-        try {
-          var fc = revenueRate*Quantity
-          setFCAmountRevenu(fc)
-          if(fcAmountRevenu){
-            setValue("RevenuFcGrossAmt", fc)
-          }
-          
-        } catch (error) {
-          console.log(error);
-        }
+    };
+  
+    const RevenueCurrencyChangeco = () => {
+      try {
+        console.log("tyytytytytytyt");
+        console.log(Quantity,"qqqqqq");
+        console.log(revenueRate,"qqqq");
+        console.log(excRate,"dddddd");
+        var lcamounts = (Quantity * revenueRate) * excRateco;
+        setValue("CostLcAmount", lcamounts);
+        setLcAmountco(lcamounts);
+      } catch (error) {
+        console.log(error);
       }
-      const FcAmountCostCal=()=>{
-        try {
-          var FcC = revenueRateco * Quantity
-          setFCAmountCost(FcC)
-          if(fcAmountRevenu){
-            setValue("CostFcGrossAmt", FcC)
-          }
-        } catch (error) {
-          console.log(error);
-        }
+    };
+  
+    const FcAmountREvenuCal = () => {
+      try {
+        var fc = revenueRate * Quantity;
+        setFCAmountRevenu(fc);
+        setValue("RevenuFcGrossAmt", fc);
+      } catch (error) {
+        console.log(error);
       }
-      const NetLcCal =()=>{
-        try {
-          
-          const lcAmountParsed = isNaN(parseFloat(lcAmount)) ? 0 : parseFloat(lcAmount);
-          const lcAmountCoParsed = isNaN(parseFloat(lcAmountco)) ? 0 : parseFloat(lcAmountco);
-          console.log(lcAmountParsed,"Lcccc",lcAmountCoParsed,"lcCCCCCco");
-          var NetLc = lcAmountParsed - lcAmountCoParsed;
-
-          console.log(NetLc,"netLllc");
-          setNetLc(NetLc)
-          if(netLc){
-            setValue("NetLc", NetLc)
-          }
-          
-        } catch (error) {
-          console.log(error);
-        }
+    };
+  
+    const FcAmountCostCal = () => {
+      try {
+        var FcC = revenueRate * Quantity;
+        setFCAmountCost(FcC);
+        setValue("CostFcGrossAmt", FcC);
+      } catch (error) {
+        console.log(error);
       }
-      useEffect(()=>{
-        NetLcCal();
-      },[lcAmount,lcAmountco])
-      
-      const CurrencyChange = (e) => {
-        const selectedValue = JSON.parse(e.target.value);
-        setExcRate(selectedValue.exchangeRate);
-        setValue("RevenueExRate", selectedValue.exchangeRate);
-        setValue("RevenueCurrency", selectedValue.name);
-      };
-      const CurrencyChangeco = (e) => {
-        const selectedValue = JSON.parse(e.target.value);
-        setExcRateco(selectedValue.exchangeRate);
-        setValue("CostExRate", selectedValue.exchangeRate);
-        setValue("CostCurrency", selectedValue.name);
-      };
-      useEffect(()=>{
-        FcAmountREvenuCal();
-        FcAmountCostCal();
-        RevenueCurrencyChangeco();
-        RevenueCurrencyChange();
-          
-      },[excRate,revenueRate,excRateco,revenueRateco,Quantity])
-
-      const onSubmit = (data) => {
-        console.log(data);
-        
-        // Sanitize the form data
-        const sanitizedData = {};
-        for (const key in data) {
-          if (data[key] !== "" && data[key] !== null) {
-            sanitizedData[key] = data[key];
-          }
+    };
+  
+    const NetLcCal = () => {
+      try {
+        const lcAmountParsed = isNaN(parseFloat(lcAmount)) ? 0 : parseFloat(lcAmount);
+        const lcAmountCoParsed = isNaN(parseFloat(lcAmountco)) ? 0 : parseFloat(lcAmountco);
+        var NetLc = lcAmountParsed - lcAmountCoParsed;
+        setNetLc(NetLc);
+          setValue("NetLc", NetLc);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    useEffect(() => {
+      NetLcCal();
+    }, [lcAmount, lcAmountco]);
+  
+    const CurrencyChangeco = (e) => {
+      const selectedValue = JSON.parse(e.target.value);
+      setExcRateco(selectedValue.exchangeRate);
+      setValue("CostExRate", selectedValue.exchangeRate);
+      setValue("CostCurrency", selectedValue.name);
+    };
+  
+    useEffect(() => {
+      FcAmountREvenuCal();
+      FcAmountCostCal();
+      RevenueCurrencyChangeco();
+      RevenueCurrencyChange();
+    }, [excRate, revenueRate, excRateco, revenueRateco, Quantity]);
+  
+    const onSubmit = (data) => {
+        const UpdateCostData = CostData.map((item, Uindex) => {
+            if (Uindex === index) {
+              return {
+                ...item,
+                 code: data.code,
+                description: data.description,
+                uomType: data.uomType,
+                uom: data.uom,
+                quantity: data.quantity,
+                tariffTerm: data.tariffTerm,
+                CostBuyingRate: data.CostBuyingRate,
+                CostpartyType: data.CostpartyType,
+                tax: data.tax,
+                Costparty: data.Costparty,
+                Costrate :data.Costrate,
+                CostFcGrossAmt: data.CostFcGrossAmt,
+                CostExRate: data.CostExRate,
+                CostCurrency: data.CostCurrency,
+                CostLcAmount:data.CostLcAmount,
+                CostRemark:data.CostRemark,
+            };
         }
-        console.log(sanitizedData, "saaaaaaaaaaaaaaaaaaa");
-      
-        // Separate items based on their prefixes
-        const costItems = {};
-        const revenueItems = {};
-        const otherItems = {};
-      
-        for (const key in sanitizedData) {
-          if (key.startsWith("Cost")) {
-            costItems[key] = sanitizedData[key];
-          } else if (key.startsWith("Reven")) {
-            revenueItems[key] = sanitizedData[key];
-          } else {
-            otherItems[key] = sanitizedData[key];
-          }
-        }
- 
-        const CostArr = {...otherItems,...costItems}
-        const RevenueArr = {...otherItems,...revenueItems}
-      
-        if(costItems.Costparty){
-           CostData.push(CostArr)
-        }
-         if(revenueItems.Revenuparty){
-          RevenueData.push(RevenueArr)
-        }
-     
-     setModal(false)
-      };
-      
+        return item;
+      });
+      setCostData(UpdateCostData);
+      setModal(false);
+    };
   return (
 <>
 <div className="modal" tabIndex="10" role="dialog" style={{ display: 'block', backdropFilter: 'blur(10px)'  }}>
@@ -191,7 +202,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                     <div className="row">
                       <div className="col-12">
                         <div className="form-heading">
-                          <h4>Revenue  & Cost Details</h4>
+                          <h4> Cost Details</h4>
                         </div>
                       </div>
                  
@@ -293,154 +304,8 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
               </div>
             </div>
            
-            <div className="row mb-3 px-5">
-              <div className="col-12">
-                <div className="form-check form-check-inline">
-                  <input
-                    type="checkbox"
-                    id="revenueCheckbox"
-                    name="revenue"
-                    className="form-check-input"
-                    checked={showRevenue}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="revenueCheckbox">
-                    Revenue Details
-                  </label>
-                </div>
-                <div className="form-check form-check-inline">
-                  <input
-                    type="checkbox"
-                    id="costCheckbox"
-                    name="cost"
-                    className="form-check-input"
-                    checked={showCost}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="costCheckbox">
-                    Cost Details
-                  </label>
-                </div>
-                <i><p style={{color:"red",fontSize:"12px"}}>Please chechout both for Net Lc</p></i>
-              </div>
-            </div>
+   
 
-      {showRevenue && (
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="card">
-              <div className="card-body">
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="form-heading">
-                        <h4>Revenue Details</h4>
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Party Type</label>
-                        <select  className={`form-control ${errors.RevenupartyType ? 'is-invalid' : ''}`}
-                          {...register("RevenupartyType", { required: true })}>
-                          <option value="">select</option>
-                          <option value="shipper">Shipper</option>
-                          <option value="Trader">Trader</option>
-                          <option value="EMKL">EMKL</option>
-                          <option value="Others">Others</option>
-                        </select>
-                        {errors.RevenupartyType && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                   
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Party</label>
-                     <input type="text" className={`form-control ${errors.Revenuparty ? 'is-invalid':""} `}
-                     {...register("Revenuparty",{required:true})} />
-                        {errors.Revenuparty && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Rate</label>
-                        <input type="number"
-                         {...register("Revenurate", { required: true })}
-                        value={revenueRate} onChange={(e)=>setRevenueRate(e.target.value)}
-                        className={`form-control ${errors.Revenurate ? 'is-invalid' : ''}`} min={0} />
-                        {errors.Revenurate && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Gross FC Amt</label>
-                        <input type="text"   
-                        {...register("RevenuFcGrossAmt")}
-                         value={fcAmountRevenu}
-                          className={`form-control ${errors.RevenuFcGrossAmt ? 'is-invalid' : ''}`}   readOnly />
-                         {errors.RevenuFcGrossAmt && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Currency</label>
-                        <select   className={`form-control `}
-                         onChange={CurrencyChange} >
-                          <option value="">select</option>
-                         {Currency.map((item,index)=>(
-                          <option key={item._id} value={JSON.stringify({ name: item.name, exchangeRate: item.exchangeRate })}>{item.name}</option>
-                         ))}
-                        </select>
-                        
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Ex.Rate</label>
-                        <input 
-                         type="text"  {...register("RevenueExRate")} 
-                          value={excRate}
-                          className={`form-control ${errors.RevenueExRate ? 'is-invalid':""} `}
-                          onChange={(e)=>setExcRate(e.target.value)}/>
-                           {errors.RevenueExRate && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>LC Amount</label>
-                        <input {...register("RevenueLcAmount", { required: true })}
-                        value={lcAmount} type='text' className={`form-control ${errors.RevenueLcAmount ?'is-invalid' : ''}`} 
-                          readOnly />
-                          {errors.RevenueLcAmount && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Tax </label>
-                        <select  className={`form-control ${errors.tax ? 'is-invalid' : ''}`}
-                          {...register("tax", { required: true })}>
-                           <option value="">select</option>
-                           <option value="0">0 %</option>
-                            <option value="1.1">1.1 %</option>
-                            <option value="11">11 %</option>
-                        </select>
-                        {errors.tax && <span className="invalid-feedback">This field is required</span>}
-                      </div>
-                    </div>
-                    <div className="col-12 col-md-6 col-xl-6">
-                      <div className="form-group local-forms">
-                        <label>Remark</label>
-                        <input {...register("RevenueRemark")} 
-                        type="text" className={`form-control ${errors.RevenueRemark ? 'is-invalid':""} `} />
-                        
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showCost && (
         <div className="row">
           <div className="col-sm-12">
             <div className="card">
@@ -500,7 +365,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         <label>Rate</label>
                         <input type="number"
                          {...register("Costrate", { required: true })}
-                        value={revenueRateco} onChange={(e)=>setRevenueRateCo(e.target.value)}
+                        value={revenueRate} onChange={(e)=>setRevenueRate(e.target.value)}
                         className={`form-control ${errors.Costrate ? 'is-invalid' : ''}`} min={0} />
                         {errors.Costrate && <span className="invalid-feedback">This field is required</span>}
                       </div>
@@ -508,7 +373,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                     <div className="col-12 col-md-6 col-xl-6">
                       <div className="form-group local-forms">
                         <label>Gross FC Amt</label>
-                        <input type="text" 
+                        <input type="text"  {...register("CostFcGrossAmt", )}
                          value={fcAmountCost} className={`form-control `} readOnly/>
                       </div>
                     </div>
@@ -517,7 +382,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                         <label>Currency</label>
                         <select   className={`form-control `}
                          onChange={CurrencyChangeco} >
-                          <option value="">select</option>
+                        <option value={item.CostCurrency}>{item.CostCurrency}</option>
                          {Currency.map((item,index)=>(
                           <option key={item._id} value={JSON.stringify({ name: item.name, exchangeRate: item.exchangeRate })}>{item.name}</option>
                          ))}
@@ -535,7 +400,7 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
                       <div className="form-group local-forms">
                         <label>LC Amount</label>
                         <input {...register("CostLcAmount", { required: true })}
-                        value={lcAmountco} type='text' className={`form-control ${errors.CostLcAmount ?'is-invalid' : ''}`} 
+                        type='text' className={`form-control ${errors.CostLcAmount ?'is-invalid' : ''}`} 
                           readOnly />
                           {errors.CostLcAmount && <span className="invalid-feedback">This field is required</span>}
                       </div>
@@ -553,7 +418,6 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
             </div>
           </div>
         </div>
-      )}
                   <div class="row justify-content-center"  >
                           <div class="col-12 col-md-6 col-xl-3 " style={{backgroundColor:"#43DDC1"}} >
                             <div class="doctor-submit text-left pt-3">
@@ -589,4 +453,4 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
   )
 }
 
-export default AddRevenueModal
+export default EditCost

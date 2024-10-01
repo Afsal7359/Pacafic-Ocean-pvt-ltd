@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import searchicon from '../../assets/img/icons/search-normal.svg';
 import addicon from '../../assets/img/icons/plus.svg';
-import { GetJobs } from '../../ApiCalls/Job';
+import { BlockEditandDeleteApi, GetJobs, UnBlockEditandDeleteApi } from '../../ApiCalls/Job';
 import { Link, useNavigate } from 'react-router-dom';
 import { GetAllParties } from '../../ApiCalls/Parties';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux'
 
 const Invoice = () => {
     const [AddModal,setAddModal]=useState(false)
@@ -15,6 +16,13 @@ const Invoice = () => {
     const [selectedParties, setSelectedParties] = useState({});
     const navigate = useNavigate();
 
+    const dispatch = useDispatch()
+    const [token,settoken]=useState()
+    const [admintoken,setadmintoken]=useState()
+    useEffect(()=>{
+      settoken(localStorage.getItem('usertoken'))
+      setadmintoken(localStorage.getItem('admintoken'))
+    },[])
 
     const JobDataFetch =async()=>{
         try {
@@ -37,7 +45,8 @@ const Invoice = () => {
             console.log(response,"par-res");
             
           }else{
-            toast.error(`${response.message}`)
+            console.log(response);
+            
           }
         } catch (error) {
           console.log(error);
@@ -57,16 +66,53 @@ const Invoice = () => {
       };
     
       const handlePrintClick = (item, index) => {
+        const count = index+1
+        console.log(count,"ccccccccccccccccccccccccccccccccc");
         const selectedParty = selectedParties[index];
         if (selectedParty) {
           const partyData = partyOptions.find(party => party._id === selectedParty);
-          navigate("/print", { state: { item, partyData }  });
+          navigate("/print", { state: { item, partyData,count }  });
         } else {
           toast.error('Please select a party before printing.');
         }
       };
 
-
+const BlockEdit = async(id)=>{
+  try {
+    console.log(id,"id");
+    
+    const response = await BlockEditandDeleteApi(id);
+    if(response.success){
+      console.log(response.data,"block edit");
+      toast.success(`${response.message}`)
+      JobDataFetch();
+    }else{
+      console.log(response,"err");
+      
+    }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+const UnBlockEdit = async(id)=>{
+  try {
+    console.log(id,"id");
+    
+    const response = await UnBlockEditandDeleteApi(id);
+    if(response.success){
+      console.log(response.data,"block edit");
+      toast.success(`${response.message}`)
+      JobDataFetch();
+    }else{
+      console.log(response,"err");
+      
+    }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
   return (
     <>
         <div className="row">
@@ -104,6 +150,7 @@ const Invoice = () => {
                 <table className="table border-0 custom-table comman-table datatable mb-0">
                   <thead>
                     <tr>
+                      <th></th>
                       <th>Action</th>
                       <th>Select Party</th>
                       <th>Book Ref.</th>
@@ -121,7 +168,42 @@ const Invoice = () => {
                   <tbody>
                       {jobData&&jobData.map((item,index)=>(
                         <tr key={index} >
-                         
+                         <td>
+                          {admintoken ?item.isBlocked === false ?
+                          ( <div className="dropdown dropdown-action">
+                            <a
+                              href="#" 
+                              className="action-icon dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                             
+                            >
+                              <i className="fa fa-ellipsis-v"></i>
+                            </a> <div className="dropdown-menu dropdown-menu-end">
+                              <a  className="dropdown-item" data-bs-toggle="modal"  onClick={()=>BlockEdit(item._id)}
+                                data-bs-target="#delete_patients">
+                                <i className="fa-solid fa-ban m-r-5"></i> Block Edit & Delete
+                              </a>
+                            </div>
+                            </div>):(
+                              <div className="dropdown dropdown-action">
+                              <a
+                                href="#"
+                                className="action-icon dropdown-toggle"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                               
+                              >
+                                <i className="fa fa-ellipsis-v"></i>
+                              </a> <div className="dropdown-menu dropdown-menu-end">
+                                <a  className="dropdown-item" data-bs-toggle="modal" onClick={()=>UnBlockEdit(item._id)}
+                                  data-bs-target="#delete_patients">
+                                  <i className="fa-solid fa-unlock-alt m-r-5"></i> Unblock Edit & Delete
+                                </a>
+                              </div>
+                              </div>
+                            ):""}
+                         </td>
                         {/* <td><Link to={"/print"} state={item} className='btn btn-primary'>Print Invoice</Link></td> */}
                         <td>
               <button

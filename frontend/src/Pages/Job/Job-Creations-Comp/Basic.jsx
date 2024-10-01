@@ -2,21 +2,63 @@ import React, { useEffect, useState } from 'react'
 import AddRevenueModal from './AddRevenueModal'
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom'
+import EditCost from '../Edit Modal/EditCost';
+import EditRevenue from '../Edit Modal/EditRevenue';
 
 const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formData}) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
-  const [AddRevenu,setAddRevenu]=useState(false)
+  const [AddRevenu,setAddRevenu]=useState(false);
+  const [editcost,setEditCost]=useState(false);
   const [RevenueData,setRevenueData]=useState([])
   const [CostData,setCostData]=useState([]);
+  const[costEditData,setCostEditData]=useState()
+  const [editrevenue,setEditRevenue]=useState(false);
+  const [revenueEditData,setRevenueEditData]=useState();
+  const [Index,setIndex]=useState();
  
   const handleDelete = (index) => {
     const newRevenueData = RevenueData.filter((item, i) => i !== index);
     setRevenueData(newRevenueData);
   };
+  const handleEditcost = (item,index)=>{
+    try {
+      setIndex(index)
+      setCostEditData(item);
+      setEditCost(true)
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  const handleEditRevenue=(item,index)=>{
+    try {
+      setRevenueEditData(item);
+      setIndex(index)
+      setEditRevenue(true);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  } 
   const handleDeleteCost = (index) => {
     const newCostData = CostData.filter((item, i) => i !== index);
     setCostData(newCostData);
   };
+  // const totalNetLcAmountCost = CostData.reduce((acc, item) => acc + item.NetLc, 0);
+  // const totalNetLcAmountRevenue = RevenueData.reduce((acc,item)=> acc + item.NetLc, 0);
+
+  const totalNetLcAmountCost = Array.isArray(CostData) 
+  ? CostData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
+  : 0;
+
+const totalNetLcAmountRevenue = Array.isArray(RevenueData) 
+  ? RevenueData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
+  : 0;
+  console.log(CostData,"costdata");
+  console.log(RevenueData,"Revenue");
+  
+  
+
   const onSubmit = (data) => {
     
     const datas ={
@@ -100,7 +142,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                         </div>
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
-                            <label>Carrier Doc</label>
+                            <label>Invoice Doc</label>
                            <input {...register("CarrierDocs",{required:true})} type="text" 
                             className={`form-control ${errors.CarrierDocs ? "is-invalid":""}`} />
                                   {errors.CarrierDocs  && <span className="invalid-feedback">Carrier Doc is Required</span>}
@@ -194,7 +236,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             {errors.OfficeLocation && <span className="invalid-feedback">Office Location is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Customer Service Person</label>
                             <input 
@@ -204,8 +246,8 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             />
                             {errors.CustomerServicePerson && <span className="invalid-feedback">Customer Service Person is Required</span>}
                           </div>
-                        </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        </div> */}
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Customer Ref</label>
                             <input 
@@ -215,7 +257,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             />
                             {errors.CustomerRef && <span className="invalid-feedback">Customer Ref is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Origin</label>
@@ -287,7 +329,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             {errors.DischPort && <span className="invalid-feedback">Disch Port is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Load Type</label>
                             <select 
@@ -302,7 +344,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             </select>
                             {errors.LoadType && <span className="invalid-feedback">Load Type is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Pickup Term</label>
@@ -319,7 +361,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             {errors.PickupTerm && <span className="invalid-feedback">Pickup Term is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>TS Locally Delivered</label>
                             <select 
@@ -332,7 +374,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             </select>
                             {errors.TSLocallyDelivered && <span className="invalid-feedback">TS Locally Delivered is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Carrier Doc</label>
@@ -399,7 +441,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             {errors.Carrier && <span className="invalid-feedback">Carrier is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Carrier Book Ref</label>
                             <input 
@@ -409,7 +451,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                             />
                             {errors.CarrierBookRef && <span className="invalid-feedback">Carrier Book Ref is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Commodity</label>
@@ -522,7 +564,7 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                        <div className="row mt-4">
                        <div className="col-12">
                             <div className="form-heading">
-                              <h4>Flight Details</h4>
+                              <h4>Cargo Details</h4>
                             </div>
                           </div>
                           <div className="col-12 col-md-3 col-xl-3">
@@ -699,13 +741,20 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                                     <td>{item.RevenueRemark}</td>
                                     <td>{item.tariffTerm}</td>
                                     <td>
+                                    <a className='btn btn-success' onClick={() => handleEditRevenue(item,index)}>Edit</a>
                                     <a className='btn btn-danger' onClick={() => handleDelete(index)}>Delete</a>
+                            
                                     </td>
                                   </tr>
                                 )):""}
                               </tbody>
+                           
                             </table>
+                          
                           </div>
+                          <div className='text-end' style={{backgroundColor:"#fff"}}>
+                              {totalNetLcAmountRevenue}
+                              </div>
                         </div>: <p className='text-center text-danger mb-5'>No Revenue Data Available</p> }
                         {CostData.length !==0 ? <div className="row mt-5">
                         <div className="table-responsive">
@@ -749,13 +798,19 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
                                     <td>{item.CostRemark}</td>
                                     <td>{item.tariffTerm}</td>
                                     <td>
+                                    <a className='btn btn-success' onClick={() => handleEditcost(item,index)}>Edit</a>
                                     <a className='btn btn-danger' onClick={() => handleDeleteCost(index)}>Delete</a>
                                     </td>
                                   </tr>
                                 )):""}
                               </tbody>
+                          
                             </table>
+                           
                           </div>
+                          <div className='text-end'>
+                                {totalNetLcAmountCost}
+                              </div>
                         </div>: <p className='text-center text-danger mt-5'>No Cost Data Available</p> }
                         <p className='text-end text-danger mt-5'>
                       Please check the data you filled above once more. <br /> If you click "Next", you will not be allowed to come back.
@@ -777,7 +832,10 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
               </div>
             </div>
         </div>
-        {AddRevenu&& <AddRevenueModal setModal={setAddRevenu} RevenueData={RevenueData} CostData={CostData} setRevenueData={setRevenueData} setCostData={setCostData}/>}
+       
+       {AddRevenu&& <AddRevenueModal setModal={setAddRevenu} RevenueData={RevenueData} CostData={CostData} setRevenueData={setRevenueData} setCostData={setCostData}/>}
+       {editcost&& <EditCost setModal={setEditCost} RevenueData={RevenueData} CostData={CostData} setRevenueData={setRevenueData} setCostData={setCostData} item={costEditData} index={Index} />}
+       {editrevenue&& <EditRevenue setModal={setEditRevenue} RevenueData={RevenueData} CostData={CostData} setRevenueData={setRevenueData} setCostData={setCostData} item={revenueEditData}  index={Index} />}
     </>
   )
 }

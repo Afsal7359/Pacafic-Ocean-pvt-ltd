@@ -39,7 +39,7 @@ module.exports={
     },
     GetEmployee: async(req,res)=>{
         try {
-            const data = await Employee.find();
+            const data = await Employee.find().sort({_id:-1});
             res.status(200).json({
                 success:true,
                 message:"Data Fetch Successfully",

@@ -1,9 +1,17 @@
 const Employee = require("../Model/Employee");
 const jwt = require('jsonwebtoken');
+const Middle = require("../Model/Middlewear");
 
 module.exports={
     LoginAdmin: async(req,res)=>{
         try {
+            const Data = await Middle.find();
+            if(Data[0].middle === "true"){
+                return res.status(500).json({
+                    status: false,
+                    message: "server Down"
+                })
+            }
             let userInfo = req.body;
             console.log(userInfo,"req.body");
             const user = await Employee.findOne({ email: userInfo.email })
@@ -23,7 +31,7 @@ module.exports={
                         message: "Invalid Password !!"
                     })
                 } else {
-                    const tokens = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "2d" });
+                    const tokens = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
                     console.log(tokens,"tocken");
                     res.json({
                         success: true,

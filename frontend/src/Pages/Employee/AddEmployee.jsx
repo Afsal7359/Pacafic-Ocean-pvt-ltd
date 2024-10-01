@@ -28,7 +28,7 @@ const AddEmployee = ({setModal,FetchData}) => {
         toast.success(`${response.message}`)
         FetchData();
       }else{
-        toast.error(`${response.message}`);
+        console.log(response);
         setIsloading(false)
       }
     } catch (error) {

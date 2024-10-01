@@ -88,5 +88,64 @@ module.exports={
                 message:"Server - error"
             })
         }
+    },
+    BlockEditandDelete : async (req, res) => {
+      try {
+        const { id } = req.params;  // Get the _id from the request parameters
+    
+        // Update the isBlocked value using findByIdAndUpdate
+        const updatedParty = await Job.findByIdAndUpdate(
+          id,  // The _id of the document to update
+          { isBlocked: true },  // The field to update
+          { new: true }  // Return the updated document
+        );
+    
+        if (!updatedParty) {
+          return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+    
+        res.status(200).json({
+          success: true,
+          message: 'Job Edit & Delete Blocked successfully',
+          data: updatedParty,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          success: false,
+          message: 'Server error',
+          error: error.message,
+        });
+      }
+    },
+    UnBlockEditandDelete: async(req,res)=>{
+      try {
+        const { id } = req.params;  // Get the _id from the request parameters
+    
+        // Update the isBlocked value using findByIdAndUpdate
+        const updatedParty = await Job.findByIdAndUpdate(
+          id,  // The _id of the document to update
+          { isBlocked: false },  // The field to update
+          { new: true }  // Return the updated document
+        );
+    
+        if (!updatedParty) {
+          return res.status(404).json({ success: false, message: 'Job not found' });
+        }
+    
+        res.status(200).json({
+          success: true,
+          message: 'Job Edit & Delete Unblocked successfully',
+          data: updatedParty,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          success: false,
+          message: 'Server error',
+          error: error.message,
+        });
+      }
     }
+    
 }

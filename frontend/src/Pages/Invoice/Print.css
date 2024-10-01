@@ -137,12 +137,12 @@ table {
 th, td {
     border: 1px solid #000;
     text-align: right;
-    font-size: xx-small;
+    font-size: x-small;
 }
 th {
     background-color: #0b57a4;
     color: #fff;
-    font-size: xx-small;
+    font-size: x-small;
 }
 .description {
     text-align: left;

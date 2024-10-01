@@ -5,11 +5,15 @@ import addicon from '../../assets/img/icons/plus.svg';
 import AddPartiesModal from './AddPartiesModal';
 import { DeleteParties, GetAllParties } from '../../ApiCalls/Parties';
 import { toast } from 'react-toastify';
+import EditPartiesModal from './EditPartiesModal';
 
 const Partieslist = () => {
     const [AddModal,setAddModal]=useState(false)
     const [Parties,setParties]=useState([])
     const [isloading,setIsloading]=useState(true)
+    const [EditModal,setEditModal]=useState(false);
+    const [editData,setEditData]=useState()
+
 
     const PartiesDataFetch = async()=>{
       try {
@@ -19,7 +23,7 @@ const Partieslist = () => {
             setParties(response.data)
             setIsloading(false)
           }else{
-            toast.error("Network Error Please Check Your connection and Reload the Page")
+            console.log(response);
           }
         
         
@@ -41,11 +45,20 @@ const Partieslist = () => {
           PartiesDataFetch()
           setIsloading(false)
         }else{
-          toast.error(`${response.message}`)
+          console.log(response);
           setIsloading(false)
         }
       } catch (error) {
         console.log(error);
+      }
+    }
+    const handleEditClick = (item,index)=>{
+      try {
+        setEditModal(true);
+        setEditData(item);
+      } catch (error) {
+        console.log(error);
+        
       }
     }
   return (
@@ -126,14 +139,11 @@ const Partieslist = () => {
                               <i className="fa fa-ellipsis-v"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-end">
-                              {/* <a  className="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#delete_patients"
-                                >
+                              <a  className="dropdown-item" data-bs-toggle="modal" onClick={()=>handleEditClick(item,index)} 
+                                data-bs-target="#delete_patients">
                                 <i className="fa-solid fa-pen-to-square m-r-5"></i> Edit
-                              </a> */}
-                              <a
-                              
-                                className="dropdown-item"
+                              </a>
+                              <a className="dropdown-item"
                                 data-bs-toggle="modal"
                                 data-bs-target="#delete_patient"
                                 onClick={()=>handleDeleteClick(item._id)}
@@ -152,6 +162,7 @@ const Partieslist = () => {
             </div>
         </div>
         {AddModal && <AddPartiesModal setModal={setAddModal} setParties={setParties}/>}
+        {EditModal && <EditPartiesModal setModal={setEditModal} partyData={editData} PartiesDataFetch={PartiesDataFetch} />}
     </>} </>
   )
 }

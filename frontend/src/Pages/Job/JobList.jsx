@@ -5,6 +5,8 @@ import AddJobModal from './AddJobModal';
 import JobCreation from './JobCreation';
 import { GetJobs } from '../../ApiCalls/Job';
 import {Link} from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify';
 
 const JobList = () => {
 
@@ -12,6 +14,16 @@ const JobList = () => {
     const [Jobcreation,setJobcreation]=useState(false)
     const [tableView,setTableView]=useState(true)
     const [jobData,setJobData]=useState([])
+
+    const dispatch = useDispatch()
+    const [token,settoken]=useState()
+    const [admintoken,setadmintoken]=useState()
+    useEffect(()=>{
+      settoken(localStorage.getItem('usertoken'))
+      setadmintoken(localStorage.getItem('admintoken'))
+    },[])
+
+
     const handleItemClick=()=>{
       try {
        setJobcreation(true)
@@ -27,6 +39,7 @@ const JobList = () => {
         if(response.success){
           setJobData(response.data)
         }else{
+          console.log(response);
           console.log(response.message,"error");
         }
       } catch (error) {
@@ -79,7 +92,7 @@ const JobList = () => {
                       <th>Book Date</th>
                       <th>Customer Ref.</th>
                       <th>Customer</th>
-                      <th>Carrier Doc</th>
+                      <th>Invoice Doc</th>
                       <th>House Doc</th>
                       <th>Customs Doc</th>
                       <th>SP Name</th>
@@ -90,7 +103,7 @@ const JobList = () => {
                   <tbody>
                       {jobData&&jobData.map((item,index)=>(
                         <tr key={index} >
-                           <td className="text-end">
+                          {item.isBlocked && !admintoken ?<td></td>: <td className="text-end">
                           <div className="dropdown dropdown-action">
                             <a
                               href="#"
@@ -119,7 +132,7 @@ const JobList = () => {
                               </a>
                             </div>
                           </div>
-                        </td>
+                        </td>}
                             <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.CarrierBookRef}</Link></td>
                             <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.Date}</Link></td>
                             <td><Link  className="dropdown-item" to={'/edit-job'} state={item}>{item.CustomerRef}</Link></td>

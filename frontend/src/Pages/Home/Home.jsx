@@ -30,18 +30,18 @@ useEffect(()=>{
       }else{
         console.log(currency,"cuuuu");
         const currencyrate = await Currencyrate(currency.name)
-        console.log(currencyrate.conversion_rates.INR,"rrrrrrrr");
-        setCurate(currencyrate.conversion_rates.INR) 
+        console.log(currencyrate.conversion_rates.IDR,"rrrrrrrr");
+        setCurate(currencyrate.conversion_rates.IDR) 
         const datas={
           _id:currency.id,
-          exchangeRate:currencyrate.conversion_rates.INR,
+          exchangeRate:currencyrate.conversion_rates.IDR,
         }
         const response = await UpdateCurrency(datas)
         if(response.success){
           toast.success("Currency Exchange Rate Updated Successfully");
           setCurrencyData(response.data)
         }else{
-          toast.error(`${response.message}`)
+          console.log(response);
         }
       }
 
@@ -77,7 +77,7 @@ useEffect(()=>{
                         </div>
                         <div className="col-12 col-md-5 col-xl-4 mt-2">
                           <div className="form-group local-forms">
-                          <button className='btn btn-primary' onClick={handleExchangeBtnClick}>Update Exchange Rate</button>
+                          <button className='btn btn-primary' onClick={handleExchangeBtnClick}>Update Exchange Rate </button>
                           
                           </div>
                         </div>
@@ -96,7 +96,7 @@ useEffect(()=>{
               <tr>
                 <th>No</th>
                 <th>Currency Name</th>
-                <th>Exc Rate</th>
+                <th>Exc Rate in IDR</th>
               </tr>
               </thead>
               <tbody>

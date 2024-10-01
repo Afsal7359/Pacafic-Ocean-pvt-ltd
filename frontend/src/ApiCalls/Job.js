@@ -24,3 +24,19 @@ export const EditJobApi = async(payload)=>{
         return error.response.data
     }
 }
+export const BlockEditandDeleteApi = async(payload)=>{
+    try {
+        const response = await instance.post(`job/block-job/${payload}`);
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}
+export const UnBlockEditandDeleteApi = async(payload)=>{
+    try {
+        const response = await instance.post(`job/unblock-job/${payload}`);
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}

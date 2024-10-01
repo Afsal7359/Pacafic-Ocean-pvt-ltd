@@ -1,41 +1,82 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { GetAllCurrency } from '../../../ApiCalls/Currency';
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
-import EditContainer from '../Edit Modal/EditContainer';
 
-const AddContainer = ({item,setItem}) => {
-    const { register, handleSubmit  , reset , formState: { errors } } = useForm();
-    const [EditData,setEditData]=useState();
-    const[editModal,setEditModal]=useState(false);
-    const[Index,setIndex]=useState()
-    console.log(item,"item");
-    
-    const handlecontainer=(datas)=>{
-        try {
-          console.log(datas,"submitted Data");
-          const updatedContainerDatas = [...item.ContainerData,datas];
-          setItem(prevItem => ({
-            ...prevItem,
-            ContainerData: updatedContainerDatas
-          }));
-          // item.ContainerData.push(datas)
-          reset();
-        } catch (error) {
-          console.log(error);
-        }
+const EditContainer = ({setModal,item,index,setItem,data}) => {
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+
+  
+    // Prepopulate form fields when editing data
+    useEffect(() => {
+      if (item) {
+     
+        setValue("containerNo",item.containerNo)
+        setValue("containerType",item.containerType)
+        setValue("customSeal",item.customSeal)
+        setValue("agentSeal",item.agentSeal)
+        setValue("tareWeight",item.tareWeight)
+        setValue("cargoWeight",item.cargoWeight)
+        setValue("netWeight",item.netWeight)
+        setValue("volumeCo",item.volumeCo)
+        setValue("packageType",item.packageType)
+        setValue("numberOfUnits",item.numberOfUnits)
+        // Add other fields as needed
       }
-      const handleEditContainer =(item,index)=>{
-        try {
-          setEditModal(true)
-          setEditData(item);
-          setIndex(index)
-        } catch (error) {
-          console.log(error);
-          
-        }
-      }
+  
+
+    }, [ item ]);
+  
+   
+  
+    const onSubmit = (datas) => {
+        // Map through the ContainerData array to update the specific item based on index
+        const UpdateContainerData = data.map((item, Uindex) => {
+          // Check if the current index matches the selected index for editing
+          if (Uindex === index) {
+            // Return the updated item with new data
+            return {
+              ...item,
+              containerNo: datas.containerNo,
+              containerType: datas.containerType,
+              customSeal: datas.customSeal,
+              agentSeal: datas.agentSeal,
+              tareWeight: datas.tareWeight,
+              cargoWeight: datas.cargoWeight,
+              netWeight: datas.netWeight,
+              volumeCo: datas.volumeCo,
+              packageType: datas.packageType,
+              numberOfUnits: datas.numberOfUnits
+            };
+          }
+          // Return the original item for all other indices
+          return item;
+        });
+      
+        console.log(UpdateContainerData); // To verify the updated data
+      
+        // Update the state with the modified array
+        setItem((prevState) => ({
+          ...prevState, // Spread previous state if there are other properties in it
+          ContainerData: UpdateContainerData // Update ContainerData with the modified array
+        }));
+      
+        // Optionally close the modal after saving
+        setModal(false);
+      };
+      
   return (
-    <>
-            <form onSubmit={handleSubmit(handlecontainer)}>
+<>
+<div className="modal" tabIndex="10" role="dialog" style={{ display: 'block', backdropFilter: 'blur(10px)'  }}>
+<div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '700px' }}>
+        <div className="modal-content" >
+            <div className="modal-header">
+              <button className="btn close submit-form" data-bs-dismiss="modal" onClick={()=>setModal(false)}>
+              <i className="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div className='container'>
+            <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="row mt-4 mb-4" style={{border:"1px solid #EEE" ,borderRadius:"15px"}}>
                         <div className="col-12 mt-4">
                           <div className="form-heading">
@@ -44,7 +85,7 @@ const AddContainer = ({item,setItem}) => {
                         </div>
                         <div className="row mt-4 mb-4" style={{ borderBottom: "0.5px solid #EEEEEE" }}>
                           
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Container No</label>
                               <input
@@ -55,7 +96,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.containerNo && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Container Type</label>
                               <select
@@ -78,7 +119,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.containerType && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Custom Seal</label>
                               <input
@@ -89,7 +130,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.customSeal && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Agent Seal</label>
                               <input
@@ -100,7 +141,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.agentSeal && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Tare Wt(kgs)</label>
                               <input
@@ -111,7 +152,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.tareWeight && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Cargo Wt(kgs)</label>
                               <input
@@ -122,7 +163,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.cargoWeight && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Net Wt(kgs)</label>
                               <input
@@ -133,7 +174,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.netWeight && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Volume</label>
                               <input
@@ -144,7 +185,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.volumeCo && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>Pkg type</label>
                               <select
@@ -163,7 +204,7 @@ const AddContainer = ({item,setItem}) => {
                               {errors.packageType && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3">
+                          <div className="col-12 col-md-5 col-xl-6">
                             <div className="form-group local-forms">
                               <label>No Of Unit</label>
                               <input
@@ -174,63 +215,26 @@ const AddContainer = ({item,setItem}) => {
                               {errors.numberOfUnits && <span className="text-danger">This field is required</span>}
                             </div>
                           </div>
-                          <div className="col-12 col-md-5 col-xl-3 ">
+                          <div className="col-12 col-md-5 col-xl-6 ">
                           <div className="form-group local-forms">
-                          <button type='submit' className='btn btn-success me-3' >Add</button>
+                          <button type='submit' className='btn btn-success me-5' >Save</button>
                             {/* <a className='btn btn-danger'>Delete</a> */}
                           </div>
                         </div>
                         </div>
                        
                         
-                        {item.ContainerData.length!==0?<div className="row mb-5">
-                        <div className="table-responsive">
-                        <table className="table border-0 custom-table comman-table datatable mb-0">
-                              <thead  >
-                                <tr style={{backgroundColor:"#8a2be22b"}}>
-                              
-                                  <th>Container No</th>
-                                  <th>Cont Type</th>
-                                  <th>Cust Seal</th>
-                                  <th>Agent Seal</th>
-                                  <th>Tare Wt(kgs)</th>
-                                  <th>Cargo Wt(kgs)</th>
-                                  <th>Net Wt(kgs)</th>
-                                  <th>Volume</th>
-                                  <th>Pkg type</th>
-                                  <th>No Of unit</th>
-                                  <th>Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {item.ContainerData?item.ContainerData.map((data,index)=>(
-                                  <tr key={index}>
-                                    <td>{data.containerNo}</td>
-                                    <td>{data.containerType}</td>
-                                    <td>{data.customSeal}</td>
-                                    <td>{data.agentSeal}</td>
-                                    <td>{data.tareWeight}</td>
-                                    <td>{data.cargoWeight}</td>
-                                    <td>{data.netWeight}</td>
-                                    <td>{data.volumeCo}</td>
-                                    <td>{data.packageType}</td>
-                                    <td>{data.numberOfUnits}</td>
-                                    <td>
-                                      <a className="btn btn-success" onClick={() => handleEditContainer(data,index)}>Edit</a>
-                                      <button className='btn btn-danger'  onClick={() => handleDelete(index)} >Delete</button>
-                                    </td>
-                                  </tr>
-                                )):""}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>: <p className='text-center text-danger'>Container Data not Available </p> }
-
+                  
                         </div>
                          </form>
-                         {editModal&& <EditContainer data={item.ContainerData} item={EditData} index={Index} setModal={setEditModal} setItem={setItem}/>}
-    </>
+                </div>	
+              </div>
+          </div>
+    </div>
+</>
+   
+
   )
 }
 
-export default AddContainer
+export default EditContainer

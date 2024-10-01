@@ -11,15 +11,38 @@ const Print = () => {
   const [Party,setParty]=useState({})
   const location = useLocation();
   const [RevenueDatas,setRevenueDatas]=useState([])
-  const[netTotal,setNetTotal]=useState()
+  const[netTotal,setNetTotal]=useState(0)
+  const [Count,setCount]=useState()
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+
   useEffect(()=>{
     if(location.state){
       setData(location.state.item);
       setRevenueDatas(location.state.item.RevenueData)
       setParty(location.state.partyData);
+      setCount(location.state.count);
+
     }
   },[])
+  const generateInvoiceNumber = () => {
+    const prefix = "IDSUB/PKKHI";
+    const currentDate = new Date();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const year = String(currentDate.getFullYear()).slice(-2);
+    const formattedCount = String(Count).padStart(3, '0');
   
+    return `${prefix}/${month}${year}/${formattedCount}`;
+  };
+  useEffect(() => {
+    setInvoiceNumber(generateInvoiceNumber());
+  }, [Count]);
+  const formatWords = (num) => {
+    const absNum = Math.abs(Math.round(num));
+    let words = toWords(absNum);
+    // Capitalize the first letter
+    words = words.charAt(0).toUpperCase() + words.slice(1);
+    return words;
+  };
 
 console.log(Data,"Data");
 console.log(Party,"par");
@@ -29,6 +52,9 @@ const totalRevenueLcAmount = RevenueDatas.reduce((acc, item) => {
 }, 0).toFixed(2);
 const totalTaxAmount = RevenueDatas.reduce((acc, item) => {
   return acc + (parseFloat(item.RevenueLcAmount) * parseFloat(item.tax)) / 100;
+}, 0).toFixed(2);
+const totalTaxValue = RevenueDatas.reduce((acc, item) => {
+  return acc + parseFloat(item.tax);
 }, 0).toFixed(2);
 
  
@@ -373,38 +399,39 @@ console.log(groupedItems,"groupitem");
       <div className='print-ikl ghrf'>
       <div className="containers">
   <div className="flex-container mb-1 mt-5">
-    <h1 style={{fontSize:"22px"}}>Pacific Ocean Logistics International Pvt Ltd.</h1>
+    <h1 style={{fontSize:"22px"}}>PT. PACIFIC OCEAN LOGISTIK INTERNATIONAL</h1>
     <img className='mx-5' src={logo} alt="" height={80} style={{width:"19%"}}/>
   </div>
   <div className="invoice-title">Tax Invoice</div>
   <div className="section">
-        <div className='pt-2 pb-2' style={{border:"1px solid #000",textAlign:"center"}}>
+        {/* <div className='pt-2 pb-2' style={{border:"1px solid #000",textAlign:"center"}}>
             <strong>IRN No:</strong>{" "}
             280dd0834224143c3938bb473d8bd68914bc92c8902b6768cee82cfc0b4b88ac
-        </div>
+        </div> */}
 
         <div className='flex-container'>
             {/* Left Side Box */}
           <div className=" mt-1" style={{border:"1px solid #000",width:"48%"}}>
             <div className='borderss px-3'>
-              Pacific Ocean Logistics International Private Limited
+            PT. PACIFIC OCEAN LOGISTIK INTERNATIONAL 
             </div>
             <div className='borderss px-3'>
              <div  style={{width:"75%",height:"85px"}}>
-             2nd Floor, 61/719/B2, Orchard Building
-            Near Saradha Madam, Ravipuram
-            M.G. Road, Cochin – 682016
+              JAPAFA INDOLAND CENTER  <br />
+              Japafa Tower 1, 9th floor Suite 901,  <br />
+              JI.Jenderal Basuki Rahmat No.129-137, <br />
+              Surabaya 60271 - Indonesia
              </div>
             </div>
-            <div className="borderss px-3">
+            {/* <div className="borderss px-3">
             <strong>GSTIN:</strong> 32AAMCP4479P1ZM
-            </div>
-          <div className="borderss px-3">
+            </div> */}
+          {/* <div className="borderss px-3">
             <strong>PAN:</strong> AAMCP4479P
           </div>
           <div className="borderss px-3 pb-0">
           <strong>CIN:</strong> U74999KL2021PTC072185
-          </div>
+          </div> */}
           </div>
           {/* Right Side Box */}
           <div className="mt-1" style={{border:"1px solid #000",width:"68%"}}>
@@ -424,7 +451,7 @@ console.log(groupedItems,"groupitem");
                 <tr >
                     <th style={{fontSize:"x-small"}}><strong style={{color:"#000"}}>State:</strong></th>
                     <th style={{fontSize:"x-small"}}><strong  style={{color:"#000"}}>State Code:</strong></th>
-                    <th style={{fontSize:"x-small"}}> <strong  style={{color:"#000"}}>GSTIN/Unique ID:</strong></th>
+                    <th style={{fontSize:"x-small"}}> <strong  style={{color:"#000"}}>Tax Id/vat:</strong></th>
                 </tr>
                 <tr>
                     <td style={{fontSize:"x-small"}}> {Party.state?Party.state:""}</td>
@@ -433,20 +460,16 @@ console.log(groupedItems,"groupitem");
                 </tr>
                 </table>
 
-                <div className='borderss px-3'>
-                <strong >Invoice No:</strong> COCFI00973/23-24
-                </div>
-                <div className='borderss px-3'>
+          
+                {/* <div className='borderss px-3'>
                 <strong>Place of Supply:</strong> TAMIL NADU
-                </div>
-                <div className='borderss px-3'>
+                </div> */}
                
-                </div>
            <table>
             <tr>
                 <th style={{fontSize:"x-small",color:"#000"}}> <strong   style={{color:"#000"}}>Invoice Date:</strong> 06-Feb-2024</th>
                 <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>Due Date:</strong> 06-Feb-2024</th>
-                <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>PAN:</strong> AGTPB7732P</th>
+                <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>Invoice No:</strong>  {invoiceNumber}</th>
             </tr>
            </table>
             
@@ -470,10 +493,7 @@ console.log(groupedItems,"groupitem");
           <h2 className='lefttext px-3'>Port of Discharge : </h2>
           <h2 className='lefttext px-3'>Origin Port : </h2>
           <h2 className='lefttext px-3'>Place of Delivery : </h2>
-          <h2 className='lefttext px-3'>Shipper : </h2>
-          <h2 className='lefttext px-3'>CI Reference  : </h2>
-          <h2 className='lefttext px-3'>Sales Person : </h2>
-          <h2 className='lefttext px-3'>Container No. : </h2>
+      
 
         </div>
         <div>
@@ -483,39 +503,28 @@ console.log(groupedItems,"groupitem");
           <h2 className='lefttext px-3'>{Data.DischPort?Data.DischPort:""}</h2>
           <h2 className='lefttext px-3'>{Data.Origin?Data.Origin:""} </h2>
           <h2 className='lefttext px-3'>{Data.Destination?Data.Destination:""} </h2>
-          <h2 className='lefttext px-3'> {Data.shipperName?Data.shipperName:""} </h2>
-          <h2 className='lefttext px-3'> .</h2>
-          <h2 className='lefttext px-3'>{Data.SalesPerson?Data.SalesPerson:""} </h2>
-          <h2 className='lefttext px-3'>20' x 1 - CXDU2340042(20GP)</h2>
+    
         </div>
         </div>
         {/* right side */}
         <div className='shpmtrightside'>
           <div>
-          <h2 className='lefttext px-3'>Job Ref : </h2>
         <h2 className='lefttext px-3'>CustomerRef : </h2>
         <h2 className='lefttext px-3'>Package Type :</h2>
         <h2 className='lefttext px-3'>N.o Of Packages : </h2>
-        <h2 className='lefttext px-3'>HBL :</h2>
         <h2 className='lefttext px-3'>MBL :  </h2>
-        <h2 className='lefttext px-3'>Weight(KGS) :</h2>
-        <h2 className="lefttext px-3">Volume(CBM) : </h2>
-        <h2 className='lefttext px-3'>Chargeable Weight : </h2>
         <h2 className='lefttext px-3'>Customs Doc Ref : </h2>
-        <h2 className="lefttext px-3">Terms of Shipment : </h2>
+        <h2 className='lefttext px-3'>Shipper : </h2>
+        <h2 className='lefttext px-3'>Sales Person : </h2>
           </div>
        <div>
-       <h2 className='lefttext px-3'> COC KAVERi 654455</h2>
         <h2 className='lefttext px-3'>{Data.CustomerRef?Data.CustomerRef:""}</h2>
         <h2 className='lefttext px-3'> {Data.PackageType?Data.PackageType:""}</h2>
         <h2 className='lefttext px-3'> {Data.NumberOfPkgs?Data.NumberOfPkgs:""}</h2>
-        <h2 className='lefttext px-3'>.</h2>
         <h2 className='lefttext px-3'> <span className='font-mbl'>COK/SOH/24/07585</span>  </h2>
-        <h2 className='lefttext px-3'> 2,940.00</h2>
-        <h2 className="lefttext px-3"> 0.00</h2>
-        <h2 className='lefttext px-3'> 0.000</h2>
         <h2 className='lefttext px-3'> {Data.CustomsDoc?Data.CustomsDoc:""}</h2>
-        <h2 className="lefttext px-3"> PREPAID</h2>
+        <h2 className='lefttext px-3'> {Data.shipperName?Data.shipperName:""} </h2>
+        <h2 className='lefttext px-3'>{Data.SalesPerson?Data.SalesPerson:""} </h2>
        </div>
 
         </div>
@@ -531,16 +540,13 @@ console.log(groupedItems,"groupitem");
     <thead>
       <tr>
         <th>Description of Service</th>
-        <th>SAC</th>
         <th>Qty/UOM</th>
         <th>Rate</th>
+        <th>Total Rate</th>
         <th>Curr./Ex.Rate</th>
         <th>Invoice Amount (FC)</th>
-        <th>Invoice Amount (INR)</th>
-        <th>Taxable Value</th>
-        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>CGST</th>
-        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>SGST/UTGST</th>
-        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>IGST</th>
+        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>Tax</th>
+        <th>Total Amount (IDR)</th>
       </tr>
       <tr>
         <th></th>
@@ -549,63 +555,47 @@ console.log(groupedItems,"groupitem");
         <th></th>
         <th></th>
         <th></th>
-        <th></th>
+        <th>Rate</th>
+        <th>Amount</th>
         <th ></th>
-        <th>Rate</th>
-        <th>Amount</th>
-        <th>Rate</th>
-        <th>Amount</th>
-        <th>Rate</th>
-        <th>Amount</th>
+    
       </tr>
     </thead>
           <tbody>
             {RevenueDatas.map((item,index)=>(
               <tr key={index}>
                 <td>{item.description}</td>
-                <td>.</td>
                 <td>{item.quantity}</td>
                 <td>{item.Revenurate}</td>
+                <td>{parseFloat(item.quantity)*parseFloat(item.Revenurate)}</td>
                 <td>{item.RevenueCurrency}<br/>{item.RevenueExRate}</td>
                 <td>{item.Revenurate}</td>
-                <td>{parseFloat(item.RevenueLcAmount).toFixed(2)}</td>
-                <td>{parseFloat(item.RevenueLcAmount).toFixed(2)}</td>
-                <td>{0}</td>
-                <td>{0}</td>
-                <td>{0}</td>
-                <td>{0}</td>
                 <td>{item.tax}</td>
                 <td>{parseFloat(((item.RevenueLcAmount)*(item.tax))/100).toFixed(2)}</td>
-
+                <td>{(parseFloat(item.RevenueLcAmount) + (parseFloat(item.RevenueLcAmount) * parseFloat(item.tax) / 100)).toFixed(2)}</td>
+              
               </tr>
             ))}
           </tbody>
 
   <tfoot>
     <tr>
-      <td colSpan={6} style={{border:"1px solid #000"}} />
-      <td style={{border:"1px solid #000"}}>
+      <td colSpan={4} style={{border:"1px solid #000"}} />
+       <td style={{border:"1px solid #000"}}>
         <strong>{totalRevenueLcAmount}</strong>
       </td>
       <td style={{border:"1px solid #000"}}>
-        <strong>{totalRevenueLcAmount}</strong>
+      <strong>{totalTaxValue}</strong>
       </td>
-      <td style={{border:"1px solid #000"}}>
-        <strong>0.00</strong>
-      </td>
-      <td style={{border:"1px solid #000"}}>
-        <strong>0.00</strong>
-      </td>
-      <td style={{border:"1px solid #000"}}>
-        <strong>0.00</strong>
-      </td>
-      <td style={{border:"1px solid #000"}}>
-        <strong>0.00</strong>
-      </td>
-      <td style={{border:"1px solid #000"}}></td>
       <td style={{border:"1px solid #000"}}>
         <strong>{totalTaxAmount}</strong>
       </td>
+      
+     
+      <td style={{border:"1px solid #000"}}>
+        <strong>{(parseFloat(totalRevenueLcAmount)+parseFloat(totalTaxAmount)).toFixed(2)}</strong>
+      </td>
+     
       
     </tr>
   </tfoot>
@@ -613,270 +603,34 @@ console.log(groupedItems,"groupitem");
     </div>
 
 
-    <div className='print-ikl ghrf' style={{ pageBreakBefore: 'always' ,border:"1px solid #000"}}>
-      <div className="containers">
-  <div className="flex-container mb-1 mt-5">
-    <h1 style={{fontSize:"22px"}}>Pacific Ocean Logistics International Pvt Ltd.</h1>
-    <img className='mx-5' src={logo} alt="" height={80} style={{width:"19%"}}/>
-  </div>
-  <div className="invoice-title">Tax Invoice</div>
-  <div className="section">
-        <div className='pt-2 pb-2' style={{border:"1px solid #000",textAlign:"center"}}>
-            <strong>IRN No:</strong>{" "}
-            280dd0834224143c3938bb473d8bd68914bc92c8902b6768cee82cfc0b4b88ac
-        </div>
-
-        <div className='flex-container'>
-            {/* Left Side Box */}
-          <div className=" mt-1" style={{border:"1px solid #000",width:"48%"}}>
-            <div className='borderss px-3'>
-              Pacific Ocean Logistics International Private Limited
-            </div>
-            <div className='borderss px-3'>
-             <div  style={{width:"75%",height:"85px"}}>
-             2nd Floor, 61/719/B2, Orchard Building
-            Near Saradha Madam, Ravipuram
-            M.G. Road, Cochin – 682016
-             </div>
-            </div>
-            <div className="borderss px-3">
-            <strong>GSTIN:</strong> 32AAMCP4479P1ZM
-            </div>
-          <div className="borderss px-3">
-            <strong>PAN:</strong> AAMCP4479P
-          </div>
-          <div className="borderss px-3 pb-0">
-          <strong>CIN:</strong> U74999KL2021PTC072185
-          </div>
-          </div>
-          {/* Right Side Box */}
-          <div className="mt-1" style={{border:"1px solid #000",width:"68%"}}>
-            <div className='borderss px-3 text-white' style={{backgroundColor:"#005f95",fontWeight:"bold"}}>Bill To</div>
-            <div className="borderss px-3 pb-2">
-            <strong>Party:</strong>{Party.name?Party.name:""}
-            </div>
-            <div className='borderss px-3' style={{display:'flex'}}>
-                <div>
-                      <strong>Address:</strong>
-                </div>
-                <div className='mx-2'>
-                    {Party.address?Party.address:""}
-                </div>
-            </div>
-                <table>
-                <tr >
-                    <th style={{fontSize:"x-small"}}><strong style={{color:"#000"}}>State:</strong></th>
-                    <th style={{fontSize:"x-small"}}><strong  style={{color:"#000"}}>State Code:</strong></th>
-                    <th style={{fontSize:"x-small"}}> <strong  style={{color:"#000"}}>GSTIN/Unique ID:</strong></th>
-                </tr>
-                <tr>
-                    <td style={{fontSize:"x-small"}}> {Party.state?Party.state:""}</td>
-                    <td style={{fontSize:"x-small"}}>{Party.statecode?Party.statecode:""}</td>
-                    <td style={{fontSize:"x-small"}}>{Party.gst?Party.gst:""}</td>
-                </tr>
-                </table>
-
-                <div className='borderss px-3'>
-                <strong >Invoice No:</strong> COCFI00973/23-24
-                </div>
-                <div className='borderss px-3'>
-                <strong>Place of Supply:</strong> TAMIL NADU
-                </div>
-                <div className='borderss px-3'>
-               
-                </div>
-           <table>
-            <tr>
-                <th style={{fontSize:"x-small",color:"#000"}}> <strong   style={{color:"#000"}}>Invoice Date:</strong> 06-Feb-2024</th>
-                <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>Due Date:</strong> 06-Feb-2024</th>
-                <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>PAN:</strong> AGTPB7732P</th>
-            </tr>
-           </table>
-            
-          </div>
-          </div>
-
-
-
-  </div>
-
-
-    <div className='shipment-deatsils' >
-      <h2 className='shipmenttext'>Shipment Details For  SEA FREIGHT EXPORT FCL</h2>
-    </div>
-    <div className='flex-container-ship pt-2'>
-      {/* left side  */}
-      <div  className='shpmtrightside'>
-        <div className='left-cont'>
-          <h2 className='lefttext px-3'>Vessel/Voyage : </h2>
-          <h2 className='lefttext px-3'>Sailed Date   : </h2>
-          <h2 className='lefttext px-3'>Port of Loading :</h2>
-          <h2 className='lefttext px-3'>Port of Discharge : </h2>
-          <h2 className='lefttext px-3'>Origin Port : </h2>
-          <h2 className='lefttext px-3'>Place of Delivery : </h2>
-          <h2 className='lefttext px-3'>Shipper : </h2>
-          <h2 className='lefttext px-3'>CI Reference  : </h2>
-          <h2 className='lefttext px-3'>Sales Person : </h2>
-          <h2 className='lefttext px-3'>Container No. : </h2>
-
-        </div>
-        <div>
-        <h2 className='lefttext px-3'>{Data.Voyage?Data.Voyage:""}</h2>
-          <h2 className='lefttext px-3'>{Data.Date?Data.Date:""} </h2>
-          <h2 className='lefttext px-3'> {Data.LoadPort?Data.LoadPort:""}</h2>
-          <h2 className='lefttext px-3'>{Data.DischPort?Data.DischPort:""}</h2>
-          <h2 className='lefttext px-3'>{Data.Origin?Data.Origin:""} </h2>
-          <h2 className='lefttext px-3'>{Data.Destination?Data.Destination:""} </h2>
-          <h2 className='lefttext px-3'> {Data.shipperName?Data.shipperName:""} </h2>
-          <h2 className='lefttext px-3'> .</h2>
-          <h2 className='lefttext px-3'>{Data.SalesPerson?Data.SalesPerson:""} </h2>
-          <h2 className='lefttext px-3'>20' x 1 - CXDU2340042(20GP)</h2>
-        </div>
-        </div>
-        {/* right side */}
-        <div className='shpmtrightside'>
-          <div>
-          <h2 className='lefttext px-3'>Job Ref : </h2>
-        <h2 className='lefttext px-3'>CustomerRef : </h2>
-        <h2 className='lefttext px-3'>Package Type :</h2>
-        <h2 className='lefttext px-3'>N.o Of Packages : </h2>
-        <h2 className='lefttext px-3'>HBL :</h2>
-        <h2 className='lefttext px-3'>MBL :  </h2>
-        <h2 className='lefttext px-3'>Weight(KGS) :</h2>
-        <h2 className="lefttext px-3">Volume(CBM) : </h2>
-        <h2 className='lefttext px-3'>Chargeable Weight : </h2>
-        <h2 className='lefttext px-3'>Customs Doc Ref : </h2>
-        <h2 className="lefttext px-3">Terms of Shipment : </h2>
-          </div>
-       <div>
-       <h2 className='lefttext px-3'> COC KAVERi 654455</h2>
-        <h2 className='lefttext px-3'>{Data.CustomerRef?Data.CustomerRef:""}</h2>
-        <h2 className='lefttext px-3'> {Data.PackageType?Data.PackageType:""}</h2>
-        <h2 className='lefttext px-3'> {Data.NumberOfPkgs?Data.NumberOfPkgs:""}</h2>
-        <h2 className='lefttext px-3'>.</h2>
-        <h2 className='lefttext px-3'> <span className='font-mbl'>COK/SOH/24/07585</span>  </h2>
-        <h2 className='lefttext px-3'> 2,940.00</h2>
-        <h2 className="lefttext px-3"> 0.00</h2>
-        <h2 className='lefttext px-3'> 0.000</h2>
-        <h2 className='lefttext px-3'> {Data.CustomsDoc?Data.CustomsDoc:""}</h2>
-        <h2 className="lefttext px-3"> PREPAID</h2>
-       </div>
-
-        </div>
-      
-
-    </div>
-      </div> 
-        {/*  Container close */}
-       </div> 
-       <div className='table-container'>
-    <table>
-    <thead>
-      <tr>
-        <th>Description of Service</th>
-        <th>SAC</th>
-        <th>Qty/UOM</th>
-        <th>Rate</th>
-        <th>Curr./Ex.Rate</th>
-        <th>Invoice Amount (FC)</th>
-        <th>Invoice Amount (INR)</th>
-        <th>Taxable Value</th>
-        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>CGST</th>
-        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>SGST/UTGST</th>
-        <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>IGST</th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th ></th>
-        <th>Rate</th>
-        <th>Amount</th>
-        <th>Rate</th>
-        <th>Amount</th>
-        <th>Rate</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
   
- 
-    </table>
-    </div>
+     
 
-    <div className="row mt-3" >
-    <div className='table-container col-10 '>
-      <table style={{border:"1px solid #000"}}>
-        <thead> 
-          <tr>
-            <th>Tax Summary</th>
-            <th>Taxable Amt</th>
-            <th colSpan={2}  className='text-center' style={{borderBottom:"1px solid #fff"}}>CGST</th>
-            <th colSpan={2}  className='text-center' style={{borderBottom:"1px solid #fff"}}>SGST/UTGST</th>
-            <th colSpan={2}  className='text-center' style={{borderBottom:"1px solid #fff"}}>IGST</th>
-            <th colSpan={2} className='text-center' style={{borderBottom:"1px solid #fff"}}>CESS</th>
-          </tr>
-          <tr>
-            <th></th>
-            <th></th>
-            <th>%</th>
-            <th>Amount</th>
-            <th>%</th>
-            <th>Amount</th>
-            <th>%</th>
-            <th>Amount</th>
-            <th>%</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {groupedItems?groupedItems.map((item,index)=>(
-            <tr key={index}>
-            <td style={{border:"1px solid #000"}}><strong>tax : {item.tax} </strong></td>
-            <td style={{border:"1px solid #000"}}><strong> {item.taxAmount} </strong></td>
-            <td style={{border:"1px solid #000"}}>0.00</td>
-            <td style={{border:"1px solid #000"}}>0.00</td>
-            <td style={{border:"1px solid #000"}}>0.00</td>
-            <td style={{border:"1px solid #000"}}>0.00</td>
-            <td style={{border:"1px solid #000"}}>{item.tax} </td>
-            <td style={{border:"1px solid #000"}}> {item.taxAmount} </td>
-            <td style={{border:"1px solid #000"}}>0.00</td>
-            <td style={{border:"1px solid #000"}}>0.00</td>
-          </tr>
-          )):""}
-        </tbody>
-      </table>
-    </div>
-    </div>
 
     <div className='flex-container-ships' style={{border:"1px solid #000"}}>
       <div  style={{fontSize:"x-small"}}>
-        <div className='pt-4'> <strong>In Words  </strong> {(netTotal)} ONLY</div>
+        <div className='pt-4'> <strong>In Words  </strong> {formatWords(netTotal)} ONLY</div>
       </div>
           <div className='pt-2' style={{fontSize:"x-small"}}>
-          <strong>  <div>Total Invoice : {netTotal} INR</div>
+          <strong>  <div>Total Invoice : {netTotal} IDR</div>
               <div>Rounded : 0.00</div>
-              <div>Net Total :  {netTotal} INR</div></strong>  
+              <div>Net Total :  {netTotal} IDR</div></strong>  
             </div>
     </div>
 
-    <div style={{backgroundColor:" #0b57a4"}}>
+    {/* <div style={{backgroundColor:" #0b57a4"}}>
       <p className='px-3' style={{fontSize:"small",color:"#fff"}}>Remark</p>
-    </div>
+    </div> */}
 
     <div className='mt-2' style={{backgroundColor:" #0b57a4",border:"1px solid #000"}}>
       <div className='px-3' style={{fontSize:"small",color:"#fff"}}>Bank Details</div>
     </div>
     <div className='flex-container-ships' style={{border:"1px solid #000"}}>
        <div style={{fontSize:"x-small"}}>
-        <div><strong className='mx-4'>Account Name</strong>    PACIFIC OCEAN LOGISTICS INTERNATIONAL PVT LTD</div>
-        <div><strong className='mx-4'>Account Number</strong>921020054649080</div>
-        <div><strong className='mx-4'>RTGS/NEFT</strong>UTIB0001499</div>
-        <div><strong className='mx-4'>Bank Name</strong>AXIS BANK</div>
-        <div><strong className='mx-4'>Swift Code</strong>AXISINBB081</div>
+        <div><strong className='mx-4'> COMPANY NAME </strong>    PT. PACIFIC OCEAN LOGISTIK INTERNATIONAL</div>
+        <div><strong className='mx-4'>USD ACCOUNT NO</strong>0883137555</div>
+        <div><strong className='mx-4'>Bank Name</strong>BCA</div>
+        <div><strong className='mx-4'>IDR ACCOUNT NO</strong>0883137547</div>
        </div>
     </div>
     </div>

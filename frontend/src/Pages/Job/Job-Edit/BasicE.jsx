@@ -19,7 +19,14 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
       setValue(key, value);
     }
   }, [item, setValue]);
- 
+  const totalNetLcAmountCost = Array.isArray(item.CostData) 
+  ? item.CostData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
+  : 0;
+
+const totalNetLcAmountRevenue = Array.isArray(item.RevenueData) 
+  ? item.RevenueData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
+  : 0;
+
  
   const handleDelete = (index) => {
     console.log("Deleted", index);
@@ -27,6 +34,8 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
     // Create a new array without the item at the specified index
     const newRevenueData = item.RevenueData.filter((_, i) => i !== index);
   
+ 
+
     // Update the item.RevenueData with the new array
     setItem(prevItem => ({
       ...prevItem,
@@ -141,7 +150,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                         </div>
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
-                            <label>Carrier Doc</label>
+                            <label>Invoice Doc</label>
                            <input {...register("CarrierDocs")} type="text" 
                              onChange={(e) => handleChange("CarrierDocs", e.target.value)}
                             className={`form-control ${errors.CarrierDocs ? "is-invalid":""}`} />
@@ -234,7 +243,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             {errors.OfficeLocation && <span className="invalid-feedback">Office Location is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Customer Service Person</label>
                             <input 
@@ -245,8 +254,8 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             />
                             {errors.CustomerServicePerson && <span className="invalid-feedback">Customer Service Person is Required</span>}
                           </div>
-                        </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        </div> */}
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Customer Ref</label>
                             <input 
@@ -257,7 +266,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             />
                             {errors.CustomerRef && <span className="invalid-feedback">Customer Ref is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Origin</label>
@@ -334,7 +343,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             {errors.DischPort && <span className="invalid-feedback">Disch Port is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Load Type</label>
                             <select 
@@ -350,7 +359,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             </select>
                             {errors.LoadType && <span className="invalid-feedback">Load Type is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Pickup Term</label>
@@ -368,7 +377,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             {errors.PickupTerm && <span className="invalid-feedback">Pickup Term is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>TS Locally Delivered</label>
                             <select 
@@ -382,7 +391,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             </select>
                             {errors.TSLocallyDelivered && <span className="invalid-feedback">TS Locally Delivered is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Carrier Doc</label>
@@ -455,7 +464,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             {errors.Carrier && <span className="invalid-feedback">Carrier is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Carrier Book Ref</label>
                             <input 
@@ -466,7 +475,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                             />
                             {errors.CarrierBookRef && <span className="invalid-feedback">Carrier Book Ref is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Commodity</label>
@@ -579,7 +588,7 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                        <div className="row mt-4">
                        <div className="col-12">
                             <div className="form-heading">
-                              <h4>Flight Details</h4>
+                              <h4>Cargo Details</h4>
                             </div>
                           </div>
                           <div className="col-12 col-md-3 col-xl-3">
@@ -774,6 +783,9 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                               </tbody>
                             </table>
                           </div>
+                          <div className="text-end">
+                            {totalNetLcAmountRevenue}
+                          </div>
                         </div>: <p className='text-center text-danger mb-5'>No Revenue Data Available</p> }
                         {item.CostData ? <div className="row mt-5">
                         <div className="table-responsive">
@@ -823,6 +835,9 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
                                 )):""}
                               </tbody>
                             </table>
+                          </div>
+                          <div className="text-end">
+                            {totalNetLcAmountCost}
                           </div>
                         </div>: <p className='text-center text-danger mt-5'>No Cost Data Available</p> }
                         <p className='text-end text-danger mt-5'>
