@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom'
 import EditCost from '../Edit Modal/EditCost';
 import EditRevenue from '../Edit Modal/EditRevenue';
+import { GetAllParties } from '../../../ApiCalls/Parties';
+import { toast } from 'react-toastify';
 
 const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formData}) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
@@ -15,6 +17,26 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
   const [editrevenue,setEditRevenue]=useState(false);
   const [revenueEditData,setRevenueEditData]=useState();
   const [Index,setIndex]=useState();
+  const [PartiesData,SetPartiesData]=useState([]);
+
+  const PartiesDataFetch = async()=>{
+    try {
+      const response = await GetAllParties();
+      console.log(response);
+      if(response.success){
+        SetPartiesData(response.data);
+      }else{
+        console.log(response.message);
+        toast.error(`${response.success}`)
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  useEffect(()=>{
+    PartiesDataFetch();
+  },[])
  
   const handleDelete = (index) => {
     const newRevenueData = RevenueData.filter((item, i) => i !== index);
@@ -48,12 +70,20 @@ const Basic = ({setAdditionalComp,setBasicComp,setServiceComp,setFormData,formDa
   // const totalNetLcAmountRevenue = RevenueData.reduce((acc,item)=> acc + item.NetLc, 0);
 
   const totalNetLcAmountCost = Array.isArray(CostData) 
-  ? CostData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
-  : 0;
+    ? CostData.reduce((acc, item) => {
+        // Check if item.NetLc exists and convert it to a valid number
+        const netLc = item.NetLc ? parseFloat(item.NetLc) || 0 : 0;
+        return acc + netLc;
+    }, 0)
+    : 0;
 
-const totalNetLcAmountRevenue = Array.isArray(RevenueData) 
-  ? RevenueData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
-  : 0;
+const totalNetLcAmountRevenue = Array.isArray(RevenueData)
+    ? RevenueData.reduce((acc, item) => {
+        // Check if item.NetLc exists and convert it to a valid number
+        const netLc = item.NetLc ? parseFloat(item.NetLc) || 0 : 0;
+        return acc + netLc;
+    }, 0)
+    : 0;
   console.log(CostData,"costdata");
   console.log(RevenueData,"Revenue");
   
@@ -105,6 +135,20 @@ const totalNetLcAmountRevenue = Array.isArray(RevenueData)
                           {errors.Service && <span className='invalid-feedback'>Service Type is required</span> }
                           </div>
                         </div>
+                        <div className="col-12 col-md-3 col-xl-3">
+                          <div className="form-group local-forms">
+                            <label>Parties</label>
+                          <select  className={`form-control ${errors.Parties ? "is-invalid":""}`}
+                          {...register("Parties",{required:true})}>
+                            <option value="" >select Parties</option>
+                            {PartiesData.map((item,index)=>(
+                              <option key={index} value={item._id}>{item.name}</option>
+                            ))}
+                           
+                          </select>
+                          {errors.Parties && <span className='invalid-feedback'>Parties is required</span> }
+                          </div>
+                        </div>
                        <div className="row mb-4 " style={{borderBottom:"1px solid #EEE "}}>
                        <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
@@ -140,14 +184,14 @@ const totalNetLcAmountRevenue = Array.isArray(RevenueData)
                           {errors.BookingSource  && <span className="invalid-feedback">Booking Source is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Invoice Doc</label>
                            <input {...register("CarrierDocs",{required:true})} type="text" 
                             className={`form-control ${errors.CarrierDocs ? "is-invalid":""}`} />
                                   {errors.CarrierDocs  && <span className="invalid-feedback">Carrier Doc is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Nomination Agent</label>
@@ -173,28 +217,16 @@ const totalNetLcAmountRevenue = Array.isArray(RevenueData)
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Customer</label>
-                            <select 
-                              {...register("Customer", { required: true })} 
-                              className={`form-control ${errors.Customer ? "is-invalid" : ""}`}
-                            >
-                              <option value="">Select</option>
-                              <option value="Auto">Auto</option>
-                              <option value="Manual">Manual</option>
-                            </select>
+                           <input type="text" {...register("Customer", { required: true })} 
+                              className={`form-control ${errors.Customer ? "is-invalid" : ""}`} />
                             {errors.Customer && <span className="invalid-feedback">Customer is Required</span>}
                           </div>
                         </div>
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Customer OU</label>
-                            <select 
-                              {...register("CustomerOU", { required: true })} 
-                              className={`form-control ${errors.CustomerOU ? "is-invalid" : ""}`}
-                            >
-                              <option value="">Select</option>
-                              <option value="Auto">Auto</option>
-                              <option value="Manual">Manual</option>
-                            </select>
+                           <input type="text" {...register("CustomerOU", { required: true })} 
+                              className={`form-control ${errors.CustomerOU ? "is-invalid" : ""}`} />
                             {errors.CustomerOU && <span className="invalid-feedback">Customer OU is Required</span>}
                           </div>
                         </div>

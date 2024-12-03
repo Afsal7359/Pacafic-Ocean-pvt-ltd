@@ -1,8 +1,13 @@
 const mongoose = require('mongoose')
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const Jobschema = new mongoose.Schema({
     BookingSource: {
         type: String,
+    },
+    Parties:{
+       type: mongoose.Schema.Types.ObjectId,
+       ref:"Parties",
     },
     Carrier:{
         type:String
@@ -317,8 +322,13 @@ const Jobschema = new mongoose.Schema({
            type: Boolean,
             default: false 
         },
+        JobId: {
+            type: Number,  
+            unique: true 
+        }
       
 
 })
+Jobschema.plugin(AutoIncrement, { inc_field: 'JobId' });
 const Job = mongoose.model('Job',Jobschema);
 module.exports = Job;

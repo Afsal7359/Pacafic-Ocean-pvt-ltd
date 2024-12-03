@@ -28,7 +28,7 @@ const Login = () => {
               toast.success(`${response.message}`)
                 console.log(response,"res-suc");
                 localStorage.setItem('usertoken',response.data)
-              
+                localStorage.setItem('userData', JSON.stringify(response.user));
                 // navigate('/parties')
                 window.location.reload();
             }else{

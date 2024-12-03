@@ -12,7 +12,7 @@ const partiesSchema =new mongoose.Schema({
         trim:true,
     },
     number1:{
-        type:Number,
+        type:String,
         require:true,
         trim:true,
     },
@@ -27,7 +27,7 @@ const partiesSchema =new mongoose.Schema({
         trim:true
     },
     number2:{
-        type:Number,
+        type:String,
         trim:true,
     },
     email1:{
@@ -79,6 +79,11 @@ const partiesSchema =new mongoose.Schema({
         require:true,
         trim:true,
     },
+    isdeleted:{
+        type:Boolean,
+        require:true,
+        default:false
+    }
 
 })
 const Parties = mongoose.model("Parties",partiesSchema);

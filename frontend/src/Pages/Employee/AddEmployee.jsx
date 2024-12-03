@@ -4,37 +4,45 @@ import { AddEmployees } from '../../ApiCalls/Employee';
 import { toast } from 'react-toastify';
 
 const AddEmployee = ({setModal,FetchData}) => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    defaultValues: {
+      canEditJob: true,
+      canDeleteJob: true
+    }
+  });
   const [isloading,setIsloading]=useState(false) 
     // Watch the password field
     const password = watch("password");
-  const onSubmit =async(data)=>{
-    // setIsloading(true)
-    try {
-      console.log(data);
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('dateOfJoining', data.dateOfJoining);
-      formData.append('email', data.email);
-      formData.append('employeeId', data.employeeId);
-      formData.append('number', data.number);
-      formData.append('password', data.password);
-      formData.append('position', data.position);
-      formData.append('region', data.region);
-      if (data.profileImage[0]) formData.append('profileImage', data.profileImage[0]);
-      const response = await AddEmployees(formData);
-      if (response.success){
-        setModal(false)
-        toast.success(`${response.message}`)
-        FetchData();
-      }else{
-        console.log(response);
-        setIsloading(false)
+    const onSubmit = async(data) => {
+      try {
+        console.log(data,'formfafafa');
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('dateOfJoining', data.dateOfJoining);
+        formData.append('email', data.email);
+        formData.append('employeeId', data.employeeId);
+        formData.append('number', data.number);
+        formData.append('password', data.password);
+        formData.append('position', data.position);
+        formData.append('region', data.region);
+        formData.append('canEditJob', data.canEditJob);
+        formData.append('canDeleteJob', data.canDeleteJob);
+        if (data.profileImage[0]) formData.append('profileImage', data.profileImage[0]);
+        
+        const response = await AddEmployees(formData);
+        if (response.success) {
+          setModal(false)
+          toast.success(`${response.message}`)
+          FetchData();
+        } else {
+          console.log(response);
+          setIsloading(false)
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
-  }
+  
   return (
     <>
     <div className="modal" tabIndex="10" role="dialog" style={{ display: 'block', backdropFilter: 'blur(10px)'  }}>
@@ -182,10 +190,40 @@ const AddEmployee = ({setModal,FetchData}) => {
                           </div>
                         </div>
 
-                      
+                        <div className="col-12 col-md-4 col-xl-4">
+                          <div className="form-group local-forms">
+                            <div className="form-check mb-4">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id="canEditJob"
+                                {...register("canEditJob")}
+                              />
+                              <label className="form-check-label" htmlFor="canEditJob">
+                                Allow Job Edit
+                              </label>
+                            </div>
+                            </div>
+                            </div>
+                            <div className="col-12 col-md-4 col-xl-4">
+                            <div className="form-group local-forms">
+                            <div className="form-check mb-2">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id="canDeleteJob"
+                                {...register("canDeleteJob")}
+                              />
+                              <label className="form-check-label" htmlFor="canDeleteJob">
+                                Allow Job Delete
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
                  
              
-                      <div className="col-12 col-md-6 col-xl-3">
+                      <div className="col-12 col-md-4 col-xl-4">
                         <div className="doctor-submit text-end">
                           <button type="submit" data-bs-dismiss="modal" className="btn btn-primary submit-form me-2">
                             Submit

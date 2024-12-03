@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import printJS from 'print-js';
-import logo from '../../assets/img/pollogo.png';
+import logo from '../../assets/img/logo2.png';
 import './Print.css'
 import { useLocation } from 'react-router-dom';
 import { toWords } from 'number-to-words';
+import { format } from 'date-fns';
+import { Calendar } from 'lucide-react';
+import { FetchIndexOfInv } from '../../ApiCalls/Job';
+import { GetAllUSDCurrency } from '../../ApiCalls/Currency';
 
 const Print = () => {
   const contentRef = useRef();
@@ -13,39 +17,183 @@ const Print = () => {
   const [RevenueDatas,setRevenueDatas]=useState([])
   const[netTotal,setNetTotal]=useState(0)
   const [Count,setCount]=useState()
+  const [Counts,setCounts]=useState()
   const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [currency,setcurrency]=useState()
+  const [currencyData,setCurrencyData]=useState([])
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+
+  useEffect(() => {
+    const initializeData = async () => {
+      if (location.state) {
+        setData(location.state.item);
+        setRevenueDatas(location.state.RevenueData);
+        setParty(location.state.partyData);
+        setCount(location.state.count);
+        setcurrency(location.state.Currency);
+        await InvIndexNumberFetch();
+        
+        if (location.state.Currency === "USD") {
+          await USDDataFetch();
+        }
+        setIsDataLoaded(true);
+      }
+    };
+
+    initializeData();
+  }, []);
+  const InvIndexNumberFetch = async()=>{
+    try {
+      const response = await FetchIndexOfInv(location.state.item._id);
+      console.log(response,"res");
+      
+      if(response.success){
+        setCounts(response.data)
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
   useEffect(()=>{
-    if(location.state){
-      setData(location.state.item);
-      setRevenueDatas(location.state.item.RevenueData)
-      setParty(location.state.partyData);
-      setCount(location.state.count);
-
+    console.log(currency,"currency USDUSDuuuuuuuuuuuuuuuuuuuuuu");
+    
+    if(currency === "USD"){
+      USDDataFetch();
     }
   },[])
+  const USDDataFetch = async()=>{
+    try {
+      const response =await GetAllUSDCurrency();
+      if(response.success){
+        setCurrencyData(response.data);
+      }
+      console.log(response,"res-usdssssssssssssssssssssssssssssssssssssssssssssssssss");
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
   const generateInvoiceNumber = () => {
-    const prefix = "IDSUB/PKKHI";
+    const prefix = "IDPOL";
     const currentDate = new Date();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const year = String(currentDate.getFullYear()).slice(-2);
     const formattedCount = String(Count).padStart(3, '0');
   
-    return `${prefix}/${month}${year}/${formattedCount}`;
+    return `${prefix}/20${year}/${formattedCount}`;
   };
   useEffect(() => {
     setInvoiceNumber(generateInvoiceNumber());
-  }, [Count]);
+  }, [Counts]);
+  // const formatWords = (num) => {
+  //   const absNum = Math.abs(Math.round(num));
+  //   let words = toWords(absNum);
+  //   // Capitalize the first letter
+  //   words = words.charAt(0).toUpperCase() + words.slice(1);
+  //   return words;
+  // };
+
   const formatWords = (num) => {
-    const absNum = Math.abs(Math.round(num));
-    let words = toWords(absNum);
-    // Capitalize the first letter
-    words = words.charAt(0).toUpperCase() + words.slice(1);
-    return words;
+    // Handle undefined, null, or NaN cases
+    if (!num || isNaN(num)) {
+      return 'Zero';
+    }
+    
+    try {
+      // Round to 2 decimal places and convert to absolute value
+      const roundedNum = Math.abs(Math.round(parseFloat(num)));
+      // Handle case where number is too large
+      if (roundedNum > Number.MAX_SAFE_INTEGER) {
+        return 'Number too large';
+      }
+      let words = toWords(roundedNum);
+      // Capitalize first letter
+      return words.charAt(0).toUpperCase() + words.slice(1);
+    } catch (error) {
+      console.error('Error converting number to words:', error);
+      return 'Zero';
+    }
+  };
+
+  // Calculate total amounts with error handling
+  const calculateTotalRevenueAmt = () => {
+    try {
+      return RevenueDatas.reduce((acc, item) => {
+        const quantity = parseFloat(item.quantity) || 0;
+        const rate = parseFloat(item.Revenurate) || 0;
+        const exRate = parseFloat(item.RevenueExRate) || 0;
+        return acc + (quantity * rate * exRate);
+      }, 0).toFixed(2);
+    } catch (error) {
+      console.error('Error calculating total revenue:', error);
+      return '0.00';
+    }
+  };
+
+  const calculateNetTotal = () => {
+    try {
+      const revenue = parseFloat(totalRevenueLcAmount) || 0;
+      const tax = parseFloat(totalTaxAmount) || 0;
+      return (revenue + tax).toFixed(2);
+    } catch (error) {
+      console.error('Error calculating net total:', error);
+      return '0.00';
+    }
+  };
+
+  // Update useEffect for netTotal calculation
+  useEffect(() => {
+    const calculatedTotal = calculateNetTotal();
+    setNetTotal(calculatedTotal);
+  }, [RevenueDatas]);
+
+
+
+  // Render amount in words with currency
+  const renderAmountInWords = () => {
+    try {
+      if (currency === "USD") {
+        // For USD, multiply by exchange rate
+        const exchangeRate = currencyData[3]?.exchangeRate || 1;
+        const amount = parseFloat(netTotal) || 0;
+        const convertedAmount = (exchangeRate * amount).toFixed(2);
+        return `${formatWords(convertedAmount)} ONLY`;
+      } else {
+        // For IDR, use the amount directly without exchange rate calculation
+        const amount = parseFloat(netTotal) || 0;
+        return `${formatWords(amount)} ONLY`;
+      }
+    } catch (error) {
+      console.error('Error rendering amount in words:', error);
+      return 'Zero ONLY';
+    }
+  }
+
+  const renderTotalAmount = () => {
+    try {
+      const amount = parseFloat(netTotal) || 0;
+      
+      if (currency === "USD") {
+        const exchangeRate = currencyData[3]?.exchangeRate || 1;
+        const convertedAmount = (exchangeRate * amount).toFixed(2);
+        return `${convertedAmount} USD`;
+      } else {
+        return `${amount.toFixed(2)} IDR`;
+      }
+    } catch (error) {
+      console.error('Error rendering total amount:', error);
+      return '0.00';
+    }
   };
 
 console.log(Data,"Data");
 console.log(Party,"par");
+const totalRevenueAmt = RevenueDatas.reduce((acc, item) => {
+  return acc + (parseFloat(item.quantity) * parseFloat(item.Revenurate)) *parseFloat(item.RevenueExRate);
+}, 0).toFixed(2);
 
 const totalRevenueLcAmount = RevenueDatas.reduce((acc, item) => {
   return acc + parseFloat(item.RevenueLcAmount);
@@ -145,6 +293,12 @@ const totalTaxValue = RevenueDatas.reduce((acc, item) => {
 }
   
 @media print {
+ @page {
+      margin: 0;
+    }
+    body {
+      margin: 1cm; /* Adjust margin as needed to avoid content cutoff */
+    }
     body {
       -webkit-print-color-adjust: exact; /* Chrome, Safari */
       color-adjust: exact; /* Firefox */
@@ -390,6 +544,18 @@ console.log(netTotal,"nettttt");
 console.log(groupedItems);
 
 console.log(groupedItems,"groupitem");
+const [dueDate, setDueDate] = useState(new Date());
+const [billDate,setBillDate]=useState(new Date());
+
+const formattedToday = format(billDate, 'dd-MMM-yyyy');
+const formattedDueDate = format(dueDate, 'dd-MMM-yyyy');
+
+const handleDueDateChange = (event) => {
+  setDueDate(new Date(event.target.value));
+};
+const handleBillDateChange = (event)=>{
+  setBillDate(new Date(event.target.value));
+}
 
   return (
     <>
@@ -399,21 +565,16 @@ console.log(groupedItems,"groupitem");
       <div className='print-ikl ghrf'>
       <div className="containers">
   <div className="flex-container mb-1 mt-5">
-    <h1 style={{fontSize:"22px"}}>PT. PACIFIC OCEAN LOGISTIK INTERNATIONAL</h1>
-    <img className='mx-5' src={logo} alt="" height={80} style={{width:"19%"}}/>
+    <h1 className='my-3' style={{fontSize:"22px"}}> PT.PACIFIC OCEAN LOGISTIK INTERNATIONAL SHIPPING</h1>
+    <img className='mx-5' src={logo} alt="" height={120} style={{width:"19%"}}/>
   </div>
   <div className="invoice-title">Tax Invoice</div>
   <div className="section">
-        {/* <div className='pt-2 pb-2' style={{border:"1px solid #000",textAlign:"center"}}>
-            <strong>IRN No:</strong>{" "}
-            280dd0834224143c3938bb473d8bd68914bc92c8902b6768cee82cfc0b4b88ac
-        </div> */}
-
         <div className='flex-container'>
             {/* Left Side Box */}
           <div className=" mt-1" style={{border:"1px solid #000",width:"48%"}}>
             <div className='borderss px-3'>
-            PT. PACIFIC OCEAN LOGISTIK INTERNATIONAL 
+             PT.PACIFIC OCEAN LOGISTIK INTERNATIONAL SHIPPING
             </div>
             <div className='borderss px-3'>
              <div  style={{width:"75%",height:"85px"}}>
@@ -423,15 +584,7 @@ console.log(groupedItems,"groupitem");
               Surabaya 60271 - Indonesia
              </div>
             </div>
-            {/* <div className="borderss px-3">
-            <strong>GSTIN:</strong> 32AAMCP4479P1ZM
-            </div> */}
-          {/* <div className="borderss px-3">
-            <strong>PAN:</strong> AAMCP4479P
-          </div>
-          <div className="borderss px-3 pb-0">
-          <strong>CIN:</strong> U74999KL2021PTC072185
-          </div> */}
+           
           </div>
           {/* Right Side Box */}
           <div className="mt-1" style={{border:"1px solid #000",width:"68%"}}>
@@ -459,16 +612,23 @@ console.log(groupedItems,"groupitem");
                     <td style={{fontSize:"x-small"}}>{Party.gst?Party.gst:""}</td>
                 </tr>
                 </table>
-
-          
-                {/* <div className='borderss px-3'>
-                <strong>Place of Supply:</strong> TAMIL NADU
-                </div> */}
                
            <table>
             <tr>
-                <th style={{fontSize:"x-small",color:"#000"}}> <strong   style={{color:"#000"}}>Invoice Date:</strong> 06-Feb-2024</th>
-                <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>Due Date:</strong> 06-Feb-2024</th>
+                <th style={{fontSize:"x-small",color:"#000"}}> <strong   style={{color:"#000"}}>Invoice Date:</strong><br /> <input
+                type="date"
+                id="billDate"
+                value={format(billDate, 'yyyy-MM-dd')}
+                onChange={handleBillDateChange}
+                className="text-xs text-gray-900 border-none"
+              /></th>
+                <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>Due Date:</strong><br /> <input
+              type="date"
+              id="dueDate"
+              value={format(dueDate, 'yyyy-MM-dd')}
+              onChange={handleDueDateChange}
+              className="text-xs text-gray-900 border-none"
+            /></th>
                 <th style={{fontSize:"x-small",color:"#000"}}><strong   style={{color:"#000"}}>Invoice No:</strong>  {invoiceNumber}</th>
             </tr>
            </table>
@@ -487,13 +647,12 @@ console.log(groupedItems,"groupitem");
       {/* left side  */}
       <div  className='shpmtrightside'>
         <div className='left-cont'>
-          <h2 className='lefttext px-3'>Vessel/Voyage : </h2>
+          <h2 className='lefttext px-3'>Voyage : </h2>
           <h2 className='lefttext px-3'>Sailed Date   : </h2>
           <h2 className='lefttext px-3'>Port of Loading :</h2>
           <h2 className='lefttext px-3'>Port of Discharge : </h2>
-          <h2 className='lefttext px-3'>Origin Port : </h2>
-          <h2 className='lefttext px-3'>Place of Delivery : </h2>
-      
+          <h2 className='lefttext px-3'>Container Type : </h2>
+          <h2 className='lefttext px-3'>Container No : </h2>
 
         </div>
         <div>
@@ -501,30 +660,34 @@ console.log(groupedItems,"groupitem");
           <h2 className='lefttext px-3'>{Data.Date?Data.Date:""} </h2>
           <h2 className='lefttext px-3'> {Data.LoadPort?Data.LoadPort:""}</h2>
           <h2 className='lefttext px-3'>{Data.DischPort?Data.DischPort:""}</h2>
-          <h2 className='lefttext px-3'>{Data.Origin?Data.Origin:""} </h2>
-          <h2 className='lefttext px-3'>{Data.Destination?Data.Destination:""} </h2>
-    
+          <h2 className='lefttext px-3'>{Data?.ContainerData?.map((item,index)=>(
+            <React.Fragment key={index}>{item.containerType} , </React.Fragment>
+          ))} </h2>
+          <h2 className='lefttext px-3'>{Data?.ContainerData?.map((item,index)=>(
+            <React.Fragment key={index}>{item.containerNo} , </React.Fragment>
+          ))} </h2>
         </div>
         </div>
         {/* right side */}
         <div className='shpmtrightside'>
           <div>
-        <h2 className='lefttext px-3'>CustomerRef : </h2>
         <h2 className='lefttext px-3'>Package Type :</h2>
         <h2 className='lefttext px-3'>N.o Of Packages : </h2>
         <h2 className='lefttext px-3'>MBL :  </h2>
+        <h2 className='lefttext px-3'>HBL :  </h2>
         <h2 className='lefttext px-3'>Customs Doc Ref : </h2>
         <h2 className='lefttext px-3'>Shipper : </h2>
-        <h2 className='lefttext px-3'>Sales Person : </h2>
+        <h2 className='lefttext px-3'>consignee Name : </h2>
           </div>
        <div>
-        <h2 className='lefttext px-3'>{Data.CustomerRef?Data.CustomerRef:""}</h2>
+      
         <h2 className='lefttext px-3'> {Data.PackageType?Data.PackageType:""}</h2>
         <h2 className='lefttext px-3'> {Data.NumberOfPkgs?Data.NumberOfPkgs:""}</h2>
-        <h2 className='lefttext px-3'> <span className='font-mbl'>COK/SOH/24/07585</span>  </h2>
+        <h2 className='lefttext px-3'> {Data?.CarrierDoc} </h2>
+        <h2 className='lefttext px-3'> {Data?.HouseDoc} </h2>
         <h2 className='lefttext px-3'> {Data.CustomsDoc?Data.CustomsDoc:""}</h2>
         <h2 className='lefttext px-3'> {Data.shipperName?Data.shipperName:""} </h2>
-        <h2 className='lefttext px-3'>{Data.SalesPerson?Data.SalesPerson:""} </h2>
+        <h2 className='lefttext px-3'>{Data.consigneeName?Data.consigneeName:""} </h2>
        </div>
 
         </div>
@@ -542,14 +705,14 @@ console.log(groupedItems,"groupitem");
         <th>Description of Service</th>
         <th>Qty/UOM</th>
         <th>Rate</th>
-        <th>Total Rate</th>
+ 
         <th>Curr./Ex.Rate</th>
-        <th>Invoice Amount (FC)</th>
+        <th>Total Rate</th>
+        {/* <th>Invoice Amount (FC)</th> */}
         <th colSpan={2} style={{borderBottom:"1px solid #fff"}}>Tax</th>
         <th>Total Amount (IDR)</th>
       </tr>
       <tr>
-        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -567,26 +730,27 @@ console.log(groupedItems,"groupitem");
                 <td>{item.description}</td>
                 <td>{item.quantity}</td>
                 <td>{item.Revenurate}</td>
-                <td>{parseFloat(item.quantity)*parseFloat(item.Revenurate)}</td>
-                <td>{item.RevenueCurrency}<br/>{item.RevenueExRate}</td>
-                <td>{item.Revenurate}</td>
+               
+                <td>{item.RevenueCurrency} - {item.RevenueExRate}</td>
+                <td>{(parseFloat(item.quantity)*parseFloat(item.Revenurate)*parseFloat(item.RevenueExRate)).toFixed(2)}</td>
+                {/* <td>{item.Revenurate}</td> */}
                 <td>{item.tax}</td>
                 <td>{parseFloat(((item.RevenueLcAmount)*(item.tax))/100).toFixed(2)}</td>
                 <td>{(parseFloat(item.RevenueLcAmount) + (parseFloat(item.RevenueLcAmount) * parseFloat(item.tax) / 100)).toFixed(2)}</td>
-              
               </tr>
             ))}
           </tbody>
 
   <tfoot>
-    <tr>
+    <tr> 
       <td colSpan={4} style={{border:"1px solid #000"}} />
        <td style={{border:"1px solid #000"}}>
-        <strong>{totalRevenueLcAmount}</strong>
+        <strong>{totalRevenueAmt}</strong>
       </td>
-      <td style={{border:"1px solid #000"}}>
+      <td  style={{border:"1px solid #000"}} />
+      {/* <td style={{border:"1px solid #000"}}>
       <strong>{totalTaxValue}</strong>
-      </td>
+      </td> */}
       <td style={{border:"1px solid #000"}}>
         <strong>{totalTaxAmount}</strong>
       </td>
@@ -595,8 +759,6 @@ console.log(groupedItems,"groupitem");
       <td style={{border:"1px solid #000"}}>
         <strong>{(parseFloat(totalRevenueLcAmount)+parseFloat(totalTaxAmount)).toFixed(2)}</strong>
       </td>
-     
-      
     </tr>
   </tfoot>
     </table>
@@ -605,18 +767,32 @@ console.log(groupedItems,"groupitem");
 
   
      
-
-
     <div className='flex-container-ships' style={{border:"1px solid #000"}}>
+          <div style={{fontSize:"x-small"}}>
+            <div className='pt-4'>
+              <strong>In Words: </strong> 
+              {renderAmountInWords()}
+            </div>
+          </div>
+          <div className='pt-2' style={{fontSize:"x-small"}}>
+            <strong>
+              <div>Total Invoice: {renderTotalAmount()}</div>
+              <div>Rounded: 0.00</div>
+              <div>Net Total: {renderTotalAmount()}</div>
+            </strong>
+          </div>
+        </div>
+
+    {/* <div className='flex-container-ships' style={{border:"1px solid #000"}}>
       <div  style={{fontSize:"x-small"}}>
-        <div className='pt-4'> <strong>In Words  </strong> {formatWords(netTotal)} ONLY</div>
+        <div className='pt-4'> <strong>In Words  </strong> {formatWords(((currencyData[3]?.exchangeRate) * netTotal).toFixed(2))} ONLY</div>
       </div>
           <div className='pt-2' style={{fontSize:"x-small"}}>
-          <strong>  <div>Total Invoice : {netTotal} IDR</div>
+          <strong>  <div>Total Invoice : {currency === "IDR" ? `${netTotal,"IDR"}` :`${((currencyData[3]?.exchangeRate) * netTotal).toFixed(2)} - USD`}</div> 
               <div>Rounded : 0.00</div>
-              <div>Net Total :  {netTotal} IDR</div></strong>  
+              <div>Net Total :  {currency === "IDR" ? `${netTotal,"IDR"}` :`${((currencyData[3]?.exchangeRate) * netTotal).toFixed(2)} - USD`}</div></strong>  
             </div>
-    </div>
+    </div> */}
 
     {/* <div style={{backgroundColor:" #0b57a4"}}>
       <p className='px-3' style={{fontSize:"small",color:"#fff"}}>Remark</p>
@@ -627,10 +803,13 @@ console.log(groupedItems,"groupitem");
     </div>
     <div className='flex-container-ships' style={{border:"1px solid #000"}}>
        <div style={{fontSize:"x-small"}}>
-        <div><strong className='mx-4'> COMPANY NAME </strong>    PT. PACIFIC OCEAN LOGISTIK INTERNATIONAL</div>
-        <div><strong className='mx-4'>USD ACCOUNT NO</strong>0883137555</div>
-        <div><strong className='mx-4'>Bank Name</strong>BCA</div>
-        <div><strong className='mx-4'>IDR ACCOUNT NO</strong>0883137547</div>
+        <div><strong className='mx-4'> BENEFICARY NAME </strong>    PT.PACIFIC OCEAN LOGISTIK INTERNATIONAL SHIPPING</div>
+        <div><strong className='mx-4'>USD ACCOUNT NO</strong>5116001600</div>
+        <div><strong className='mx-4'>IDR ACCOUNT NO</strong>2716001600</div>
+        <div><strong className='mx-4'>SWIFT</strong>BNINIDJAXXX</div>
+        <div><strong className='mx-4'>Bank Name</strong>PT BANK NEGARA INDONESIA(PERSERO) TBK (BNI)</div>
+        <div><strong className='mx-4'>BRANCH</strong>SURABAYA</div>
+        <div><strong className='mx-4'>ADDRESS</strong>JALAN HR MUHAMMAD NO.94 SURABAYA, INDONESIA.</div>
        </div>
     </div>
     </div>

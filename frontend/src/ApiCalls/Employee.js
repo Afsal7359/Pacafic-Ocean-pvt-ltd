@@ -8,6 +8,14 @@ export const GetAllEmployees = async()=>{
         return error.response.data
     }
 }
+export const GetAllEmployeesById = async(payload)=>{
+    try {
+        const response = await instance.get(`employee/get-EmployeeById/${payload}`)
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}
 export const AddEmployees = async(payload)=>{
     try {
         const response = await instance.post('employee/add-Employee',payload,{
@@ -31,6 +39,14 @@ export const DeleteEmployees = async(payload)=>{
 export const EmployeeLogin = async(payload)=>{
     try {
         const response = await instance.post('employee/login',payload);
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}
+export const UpdateEmployee = async(payload)=>{
+    try {
+        const response = await instance.post('employee/edit-Employee',payload);
         return response.data
     } catch (error) {
         return error.response.data

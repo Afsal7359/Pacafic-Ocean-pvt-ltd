@@ -15,7 +15,14 @@
     }
   }
   
-
+  @media print {
+    @page {
+      margin: 0;
+    }
+    body {
+      margin: 1cm; /* Adjust margin as needed to avoid content cutoff */
+    }
+  }
 
 .abcd {
    

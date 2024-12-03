@@ -4,12 +4,15 @@ import addicon from '../../assets/img/icons/plus.svg';
 import AddEmployee from './AddEmployee';
 import { DeleteEmployees, GetAllEmployees } from '../../ApiCalls/Employee';
 import { toast } from 'react-toastify';
+import EditEmployee from './EditEmployee';
 
 const EmployeeList = () => {
   const [Modal,setModal]=useState(false)
   const [EmpList,setEmpList]=useState(true)
   const [Data,setData]=useState([]);
   const [isloading,setIsloading]=useState(true)
+  const [EditModal,setEditModal]=useState(false)
+  const [editData,setEditData]=useState();
 
   const EmployeeDataFetch =async()=>{
     try {
@@ -107,7 +110,7 @@ const EmployeeList = () => {
                             <td>{item.password}</td>
                             <td>{item.position}</td>
                             <td>
-                              <img style={{height:"65px"}} src={item.profileImage} alt="" />
+                              <img style={{height:"65px",width:"165px"}} src={item.profileImage} alt="" />
                             </td>
                             <td className="text-end">
                           <div className="dropdown dropdown-action">
@@ -121,11 +124,12 @@ const EmployeeList = () => {
                               <i className="fa fa-ellipsis-v"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-end">
-                              {/* <a  className="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#delete_patients"
+                              <a  className="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#delete_patients" 
+                                onClick={()=>{setEditData(item),setEditModal(true)}}
                                 >
                                 <i className="fa-solid fa-pen-to-square m-r-5"></i> Edit
-                              </a> */}
+                              </a>
                               <a
                               
                                 className="dropdown-item"
@@ -148,6 +152,7 @@ const EmployeeList = () => {
             </div>
         </div>}
         {Modal && <AddEmployee setModal={setModal} setEmpList={setEmpList} FetchData={EmployeeDataFetch}/>}
+        {EditModal && <EditEmployee setModal={setEditModal} FetchData={EmployeeDataFetch} editData={editData} />}
     </>
   )
 }

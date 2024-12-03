@@ -37,6 +37,14 @@ const EmployeeSchema = new mongoose.Schema({
         region:{
             type:String,
             require:true,
+        },
+        canDeleteJob:{
+            type:Boolean,
+            require:true
+        },
+        canEditJob:{
+            type:Boolean,
+            require:true
         }
 
 })

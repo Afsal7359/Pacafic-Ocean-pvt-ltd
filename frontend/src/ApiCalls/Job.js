@@ -40,3 +40,25 @@ export const UnBlockEditandDeleteApi = async(payload)=>{
         return error.response.data
     }
 }
+
+export const FetchIndexOfInv = async(payload)=>{
+    try {
+        const response = await instance.post('job/findbyid', null, {
+            params: { id: payload }
+          });
+        return response.data;
+    } catch (error) {
+        return error.response.data
+    }
+}
+
+export const DeleteJobApi = async(payload)=>{
+    try {
+        const response = await instance.post('job/delete-job', null, {
+            params: { id: payload }
+          });
+        return response.data;
+    } catch (error) {
+        return error.response.data
+    }
+}

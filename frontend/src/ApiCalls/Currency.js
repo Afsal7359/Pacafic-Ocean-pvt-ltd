@@ -25,3 +25,19 @@ export const Currencyrate = async(payload)=>{
         return error.response.data
     }
 }
+export const GetAllUSDCurrency = async()=>{
+    try {
+        const response = await instance.get('currency/get-usdcurrency')
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}
+export const UpdateUSDCurrency = async(payload)=>{
+    try {
+        const response = await instance.post('currency/edit-usdcurrency',payload)
+        return response.data
+    } catch (error) {
+        return error.response.data
+    }
+}

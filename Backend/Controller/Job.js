@@ -1,5 +1,6 @@
 
 const Job = require("../Model/Job");
+const mongoose = require('mongoose');
 
 module.exports={
     AddJob : async(req,res)=>{
@@ -7,7 +8,7 @@ module.exports={
            const Data = req.body
            console.log(Data,"Dtaa");
            await Job.create(Data)
-              const datas = await Job.find().sort({_id:-1});
+              const datas = await Job.find().sort({_id:-1}).populate('Parties');
               res.status(200).json({
                 success:true,
                 message:"Job Added Successfully",
@@ -56,7 +57,7 @@ module.exports={
       },
     GetJob: async(req,res)=>{
         try {
-            const JobData = await Job.find().sort({_id:-1})
+            const JobData = await Job.find().sort({_id:-1}).populate('Parties');
             res.status(200).json({
                 success:true,
                 message:"Job Data Fetched Successfully",
@@ -73,7 +74,7 @@ module.exports={
     },
     DeleteJob: async(req,res)=>{
         try {
-            const id = req.params;
+          const id = req.query.id;
             const JobData = await Job.findByIdAndDelete(id)
           
                 res.status(200).json({
@@ -145,6 +146,30 @@ module.exports={
           message: 'Server error',
           error: error.message,
         });
+      }
+    },
+  
+
+    GetIndexNUmber : async(req,res)=>{
+      try {
+        const id = req.query.id;
+
+
+        // Ensure the id is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).json({success:false, message: 'Invalid document ID' });
+        }
+    
+        // Find all documents with _id less than or equal to the given id
+        const count = await Job.countDocuments({
+          _id: { $lte: new mongoose.Types.ObjectId(id) }
+        });
+    
+     
+    
+        res.status(200).json({success:true, message: 'Success',data:count});
+      } catch (error) {
+        res.status(500).json({success:false, message: 'Error finding document index', error: error.message });
       }
     }
     

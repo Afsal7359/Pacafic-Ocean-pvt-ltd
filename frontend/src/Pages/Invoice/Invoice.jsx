@@ -6,14 +6,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GetAllParties } from '../../ApiCalls/Parties';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux'
+import RevenuePrintModal from './RevenuePrintModal'; 
 
 const Invoice = () => {
-    const [AddModal,setAddModal]=useState(false)
+  const [AddModal,setAddModal]=useState(false)
     const [Jobcreation,setJobcreation]=useState(false)
     const [tableView,setTableView]=useState(true)
     const [jobData,setJobData]=useState([])
     const [partyOptions, setPartyOptions] = useState([]);
     const [selectedParties, setSelectedParties] = useState({});
+    const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+    const [currentJobForPrint, setCurrentJobForPrint] = useState(null);
+    const [index,setIndex]=useState(0)
     const navigate = useNavigate();
 
     const dispatch = useDispatch()
@@ -58,23 +62,29 @@ const Invoice = () => {
         PartiesDataFetch();
       },[])
 
-      const handleSelectChange = (index, value) => {
-        setSelectedParties(prev => ({
-          ...prev,
-          [index]: value
-        }));
+      const handlePrintClick = (item, indexs) => {
+        setIndex(indexs)
+        // Open the print modal for this specific job
+        setCurrentJobForPrint(item);
+        setIsPrintModalOpen(true);
       };
-    
-      const handlePrintClick = (item, index) => {
-        const count = index+1
-        console.log(count,"ccccccccccccccccccccccccccccccccc");
-        const selectedParty = selectedParties[index];
-        if (selectedParty) {
-          const partyData = partyOptions.find(party => party._id === selectedParty);
-          navigate("/print", { state: { item, partyData,count }  });
-        } else {
-          toast.error('Please select a party before printing.');
-        }
+
+      const handlePrintSelectedItems = (selectedItems,selectedParty,selectedCurrency) => {
+        console.log(selectedItems,"selected pritn item");
+        console.log(selectedItems.length,"length");
+        
+        // Navigate to print page with selected items
+        const indexx = (index+1) // You might want to adjust this
+        const count =(`${indexx}${selectedItems.selectedItems.length}`)
+        navigate("/print", { 
+          state: { 
+            item: currentJobForPrint, 
+            RevenueData: selectedItems.selectedItems,
+            partyData:selectedItems.selectedParty,
+            count: count ,
+            Currency:selectedItems.selectedCurrency,
+          }
+        });
       };
 
 const BlockEdit = async(id)=>{
@@ -145,17 +155,14 @@ const UnBlockEdit = async(id)=>{
                   </div>
                 </div>
               </div>
-             <i><p style={{paddingLeft:"20px",color:"red"}}>Please select the party before the Print</p></i> 
+             {/* <i><p style={{paddingLeft:"20px",color:"red"}}>Please select the party before the Print</p></i>  */}
               <div className="table-responsive">
                 <table className="table border-0 custom-table comman-table datatable mb-0">
                   <thead>
                     <tr>
                       <th></th>
                       <th>Action</th>
-                      <th>Select Party</th>
-                      <th>Book Ref.</th>
                       <th>Book Date</th>
-                      <th>Customer Ref.</th>
                       <th>Customer</th>
                       <th>Carrier Doc</th>
                       <th>House Doc</th>
@@ -213,7 +220,7 @@ const UnBlockEdit = async(id)=>{
                 Print Invoice
               </button>
             </td>
-                        <td>
+                {/*         <td>
               <select className='form-control'
                 value={selectedParties[index] || ''}
                 onChange={e => handleSelectChange(index, e.target.value)}
@@ -222,11 +229,9 @@ const UnBlockEdit = async(id)=>{
                 {partyOptions.map((party, i) => (
                   <option key={i} value={party._id}>{party.name}</option>
                 ))}
-              </select>
-              </td>
-                            <td>{item.CarrierBookRef}</td>
+              </select> 
+              </td>*/}
                             <td>{item.Date}</td>
-                            <td>{item.CustomerRef}</td>
                             <td>{item.Customer}</td>
                             <td>{item.CarrierDoc}</td>
                             <td>{item.HouseDoc}</td>
@@ -241,6 +246,13 @@ const UnBlockEdit = async(id)=>{
             </div>
             </div>
         </div>
+        <RevenuePrintModal 
+            isOpen={isPrintModalOpen}
+            onClose={() => setIsPrintModalOpen(false)}
+            revenueData={currentJobForPrint?.RevenueData || []}
+            onPrint={handlePrintSelectedItems}
+             partyData={partyOptions}
+        />
     </>
   )
 }

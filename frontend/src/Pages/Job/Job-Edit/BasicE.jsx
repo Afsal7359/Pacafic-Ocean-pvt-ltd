@@ -1,6 +1,8 @@
 import React,{useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form';
 import AddRevenueModal from './AddRevenueModal';
+import EditCostE from '../Edit Modal/EditCostE';
+import EditRevenueEe from '../Edit Modal/EditRevenueEe';
 
 const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({
@@ -9,6 +11,11 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
     const [AddRevenu,setAddRevenu]=useState(false)
     const [RevenueData,setRevenueData]=useState([])
     const [CostData,setCostData]=useState([]);
+    const [editrevenue,setEditRevenue]=useState(false);
+    const [editcost,setEditCost]=useState(false);
+    const[costEditData,setCostEditData]=useState()
+    const [revenueEditData,setRevenueEditData]=useState();
+    const [Index,setIndex]=useState();
 
     const handleChange = (field, value) => {
         setItem(prevItem => ({ ...prevItem, [field]: value }));
@@ -19,14 +26,29 @@ const BasicE = ({item,setItem,setAdditionalComp,setBasicComp,setServiceComp}) =>
       setValue(key, value);
     }
   }, [item, setValue]);
-  const totalNetLcAmountCost = Array.isArray(item.CostData) 
-  ? item.CostData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
-  : 0;
 
-const totalNetLcAmountRevenue = Array.isArray(item.RevenueData) 
-  ? item.RevenueData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
-  : 0;
+//   const totalNetLcAmountCost = Array.isArray(item.CostData) 
+//   ? item.CostData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
+//   : 0;
 
+// const totalNetLcAmountRevenue = Array.isArray(item.RevenueData) 
+//   ? item.RevenueData.reduce((acc, item) => acc + parseFloat(item.NetLc), 0) 
+//   : 0;
+const totalNetLcAmountCost = Array.isArray(item.CostData) 
+    ? item.CostData.reduce((acc, item) => {
+        // Check if item.NetLc exists and convert it to a valid number
+        const netLc = item.CostLcAmount? parseFloat(item.CostLcAmount) || 0 : 0;
+        return acc + netLc;
+    }, 0)
+    : 0;
+
+const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
+    ? item.RevenueData.reduce((acc, item) => {
+        // Check if item.NetLc exists and convert it to a valid number
+        const netLc = item.RevenueLcAmount ? parseFloat(item.RevenueLcAmount) || 0 : 0;
+        return acc + netLc;
+    }, 0)
+    : 0;
  
   const handleDelete = (index) => {
     console.log("Deleted", index);
@@ -74,6 +96,26 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
             
         }
       }
+      const handleEditcost = (item,index)=>{
+        try {
+          setIndex(index)
+          setCostEditData(item);
+          setEditCost(true)
+        } catch (error) {
+          console.log(error);
+          
+        }
+      }
+      const handleEditRevenue=(item,index)=>{
+        try {
+          setRevenueEditData(item);
+          setIndex(index)
+          setEditRevenue(true);
+        } catch (error) {
+          console.log(error);
+          
+        }
+      } 
   return (
     <>
     <div className="container mt-2">
@@ -148,7 +190,7 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
                           {errors.BookingSource  && <span className="invalid-feedback">Booking Source is Required</span>}
                           </div>
                         </div>
-                        <div className="col-12 col-md-3 col-xl-3">
+                        {/* <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Invoice Doc</label>
                            <input {...register("CarrierDocs")} type="text" 
@@ -156,7 +198,7 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
                             className={`form-control ${errors.CarrierDocs ? "is-invalid":""}`} />
                                   {errors.CarrierDocs  && <span className="invalid-feedback">Carrier Doc is Required</span>}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-12 col-md-3 col-xl-3">
                           <div className="form-group local-forms">
                             <label>Nomination Agent</label>
@@ -776,6 +818,7 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
                                     <td>{data.RevenueRemark}</td>
                                     <td>{data.tariffTerm}</td>
                                     <td>
+                                    <a className='btn btn-success px-3 mx-3' onClick={() => handleEditRevenue(data,index)}>Edit</a>
                                     <a className='btn btn-danger' onClick={() => handleDelete(index)}>Delete</a>
                                     </td>
                                   </tr>
@@ -784,7 +827,7 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
                             </table>
                           </div>
                           <div className="text-end">
-                            {totalNetLcAmountRevenue}
+                          Total Lc : {totalNetLcAmountRevenue}
                           </div>
                         </div>: <p className='text-center text-danger mb-5'>No Revenue Data Available</p> }
                         {item.CostData ? <div className="row mt-5">
@@ -829,7 +872,8 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
                                     <td>{data.CostRemark}</td>
                                     <td>{data.tariffTerm}</td>
                                     <td>
-                                    <div className='btn btn-danger' onClick={()=>handleDeleteCost(index)}>Delete</div>
+                                    <div className='btn btn-success px-3' onClick={() => handleEditcost(data,index)}>Edit</div>
+                                    <div className='btn btn-danger mx-2' onClick={()=>handleDeleteCost(index)}>Delete</div>
                                     </td>
                                   </tr>
                                 )):""}
@@ -837,9 +881,13 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
                             </table>
                           </div>
                           <div className="text-end">
-                            {totalNetLcAmountCost}
+                           Total Lc : {totalNetLcAmountCost}
                           </div>
                         </div>: <p className='text-center text-danger mt-5'>No Cost Data Available</p> }
+
+                        <p className='text-end mt-5'>
+                          Total NetLc : {totalNetLcAmountRevenue - totalNetLcAmountCost}
+                        </p>
                         <p className='text-end text-danger mt-5'>
                       Please check the data you filled above once more. <br /> If you click "Next", you will not be allowed to come back.
                     </p>
@@ -860,6 +908,9 @@ const totalNetLcAmountRevenue = Array.isArray(item.RevenueData)
               </div>
             </div>
         </div>
+        {editcost&& <EditCostE setModal={setEditCost} RevenueData={item.RevenueData} CostData={item.CostData} setRevenueData={setRevenueData} setCostData={setCostData} item={costEditData} index={Index} Data={item} />}
+        {editrevenue&& <EditRevenueEe setModal={setEditRevenue} RevenueData={item.RevenueData} CostData={item.CostData} setRevenueData={setRevenueData} setCostData={setCostData} item={revenueEditData}  index={Index} Data={item} />}
+
         {AddRevenu&& <AddRevenueModal item={item} setModal={setAddRevenu} RevenueData={RevenueData} CostData={CostData} setRevenueData={setRevenueData} setCostData={setCostData}/>}
     </>
   )

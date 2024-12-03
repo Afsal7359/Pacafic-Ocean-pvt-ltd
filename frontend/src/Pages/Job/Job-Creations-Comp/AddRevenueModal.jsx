@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 
 const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueData}) => {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm();
     const [showRevenue, setShowRevenue] = useState(true);
     const [showCost, setShowCost] = useState(false);
     const [Quantity,setQuantity]=useState();
@@ -20,6 +20,8 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
     const [fcAmountRevenu,setFCAmountRevenu]=useState()
     const [fcAmountCost,setFCAmountCost]=useState()
     const [netLc,setNetLc]=useState(0)
+
+   
 
     const handleCheckboxChange = (e) => {
         const { name, checked } = e.target;
@@ -168,7 +170,21 @@ const AddRevenueModal = ({setModal,setCostData,setRevenueData,CostData,RevenueDa
           RevenueData.push(RevenueArr)
         }
      
-     setModal(false)
+     setModal(true)
+     toast.success('Item Addedd Successfully')
+     reset();
+
+     // Reset state variables
+     setQuantity('');
+     setRevenueRate('');
+     setExcRate('');
+     setLcAmount(0);
+     setRevenueRateCo('');
+     setExcRateco('');
+     setLcAmountco(0);
+     setNetLc(0);
+     setFCAmountRevenu('');
+     setFCAmountCost('');
       };
       
   return (

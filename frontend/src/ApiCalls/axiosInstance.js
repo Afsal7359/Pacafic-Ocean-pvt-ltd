@@ -17,7 +17,7 @@ instance.interceptors.request.use(
                 config.headers['Authorization'] = `Bearer ${admintoken}`;
             }
         } catch (error) {
-            console.error('Error fetching token from AsyncStorage:', error);
+            console.error('Error fetching token from storage:', error);
         }
         return config;
     },

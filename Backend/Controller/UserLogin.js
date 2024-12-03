@@ -37,6 +37,7 @@ module.exports={
                         success: true,
                         message: "logged in successfully",
                         data:tokens,
+                        user:user
                     })
                 }
             } else {

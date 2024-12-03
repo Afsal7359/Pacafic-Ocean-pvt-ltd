@@ -8,15 +8,16 @@ import {
 import { useSelector } from "react-redux";
 import Header from "./Components/Header/Header";
 import Sidebar from "./Components/Sidebar/Sidebar";
-import Home from "./Pages/Home/Home";
-import Partieslist from "./Pages/Parties/Partieslist";
-import JobList from "./Pages/Job/JobList";
-import Print from "./Pages/Invoice/Print";
-import EmployeeList from "./Pages/Employee/EmployeeList";
-import JobEdit from "./Pages/Job/JobEdit";
-import Invoice from "./Pages/Invoice/Invoice";
-import Admin from "./Pages/Login/Admin";
-import Login from "./Pages/Employee/Login";
+
+const Home =  lazy(() => import("./Pages/Home/Home"));
+const Partieslist =  lazy(() => import("./Pages/Parties/Partieslist"));
+const JobList =  lazy(() => import("./Pages/Job/JobList"));
+const Print =  lazy(() => import("./Pages/Invoice/Print"));
+const EmployeeList =  lazy(() => import("./Pages/Employee/EmployeeList"));
+const JobEdit =  lazy(() => import("./Pages/Job/JobEdit"));
+const Invoice =  lazy(() => import("./Pages/Invoice/Invoice"));
+const Admin =  lazy(() => import("./Pages/Login/Admin"));
+const Login =  lazy(() => import("./Pages/Employee/Login"));
 import { selectAuth } from "./store/AuthSlice";
 import backgroundvideo from './assets/img/video/background.gif'
 

@@ -32,7 +32,7 @@ module.exports={
               });
           
               await newParty.save();
-              const datas = await Parties.find().sort({_id:-1});
+              const datas = await Parties.find({ isdeleted: { $ne: true } }).sort({_id:-1});
               res.status(200).json({
                 success:true,
                 message:"Party Added Successfully",
@@ -94,7 +94,7 @@ module.exports={
       
           await existingParty.save();
       
-          const updatedParties = await Parties.find().sort({ _id: -1 });
+          const updatedParties = await Parties.find({ isdeleted: { $ne: true } }).sort({ _id: -1 });
       
           res.status(200).json({
             success: true,
@@ -146,7 +146,7 @@ module.exports={
       },
     GetParties: async(req,res)=>{
         try {
-            const PartiesData = await Parties.find().sort({_id:-1})
+            const PartiesData = await Parties.find({ isdeleted: { $ne: true } }).sort({_id:-1})
             res.status(200).json({
                 success:true,
                 message:"Parties Data Fetched Successfully",
@@ -164,6 +164,7 @@ module.exports={
     DeleteParties: async(req,res)=>{
         try {
             const id = req.params.id;
+            await Parties.updateOne({ _id: id }, { $set: { isdeleted: true } });
             // if (Deletedata) {
             //     const publicIdgst = Deletedata.gstphoto.split('/').pop().split('.')[0];
             //     const publicIdpan = Deletedata.panphoto.split('/').pop().split('.')[0];
@@ -174,7 +175,7 @@ module.exports={
             //     ]);
             // }
           
-                await Parties.findByIdAndDelete({_id:id});
+                // await Parties.findByIdAndDelete({_id:id});
                 // const Data= await Parties.find()
                 res.status(200).json({
                     success:true,
