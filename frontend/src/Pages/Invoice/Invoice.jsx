@@ -83,6 +83,8 @@ const Invoice = () => {
             partyData:selectedItems.selectedParty,
             count: count ,
             Currency:selectedItems.selectedCurrency,
+            exchangeRate: selectedItems.exchangeRate
+
           }
         });
       };

@@ -22,6 +22,7 @@ const Print = () => {
   const [currency,setcurrency]=useState()
   const [currencyData,setCurrencyData]=useState([])
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [exchangeRate,setExchangeRate]=useState()
 
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const Print = () => {
         setParty(location.state.partyData);
         setCount(location.state.count);
         setcurrency(location.state.Currency);
+        setExchangeRate(location.state.exchangeRate);
         await InvIndexNumberFetch();
         
         if (location.state.Currency === "USD") {
@@ -157,14 +159,12 @@ const Print = () => {
     try {
       if (currency === "USD") {
         // For USD, multiply by exchange rate
-        const exchangeRate = currencyData[3]?.exchangeRate || 1;
-        const amount = parseFloat(netTotal) || 0;
-        const convertedAmount = (exchangeRate * amount).toFixed(2);
-        return `${formatWords(convertedAmount)} ONLY`;
+     
+        return `${formatWords(exchangeRate)} USD ONLY`;
       } else {
         // For IDR, use the amount directly without exchange rate calculation
         const amount = parseFloat(netTotal) || 0;
-        return `${formatWords(amount)} ONLY`;
+        return `${formatWords(amount)} IDR ONLY`;
       }
     } catch (error) {
       console.error('Error rendering amount in words:', error);
@@ -177,11 +177,10 @@ const Print = () => {
       const amount = parseFloat(netTotal) || 0;
       
       if (currency === "USD") {
-        const exchangeRate = currencyData[3]?.exchangeRate || 1;
-        const convertedAmount = (exchangeRate * amount).toFixed(2);
-        return `${convertedAmount} USD`;
+        
+        return `${exchangeRate}  USD`;
       } else {
-        return `${amount.toFixed(2)} IDR`;
+        return `${(amount).toFixed(2)} IDR`;
       }
     } catch (error) {
       console.error('Error rendering total amount:', error);
