@@ -178,7 +178,7 @@ const UnBlockEdit = async(id)=>{
                       {jobData&&jobData.map((item,index)=>(
                         <tr key={index} >
                          <td>
-                          {admintoken ?item.isBlocked === false ?
+                          {/* {admintoken ?item.isBlocked === false ?
                           ( <div className="dropdown dropdown-action">
                             <a
                               href="#" 
@@ -211,7 +211,7 @@ const UnBlockEdit = async(id)=>{
                                 </a>
                               </div>
                               </div>
-                            ):""}
+                            ):""} */}
                          </td>
                         {/* <td><Link to={"/print"} state={item} className='btn btn-primary'>Print Invoice</Link></td> */}
                         <td>

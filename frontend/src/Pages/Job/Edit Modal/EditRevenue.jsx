@@ -400,8 +400,8 @@ const EditRevenue = ({setModal,setCostData,setRevenueData,CostData,RevenueData,i
                           {...register("tax", { required: true })}>
                            <option value="">select</option>
                            <option value="0">0 %</option>
-                            <option value="1.1">1.1 %</option>
-                            <option value="11">11 %</option>
+                            <option value="1.2">1.2 %</option>
+                            <option value="12">12 %</option>
                         </select>
                         {errors.tax && <span className="invalid-feedback">This field is required</span>}
                       </div>

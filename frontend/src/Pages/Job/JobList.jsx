@@ -187,15 +187,15 @@ const JobList = () => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.JobId}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.Date}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.Customer}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.CarrierDoc}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.HouseDoc}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.CustomsDoc}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.SalesPerson}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.Origin}</Link></td>
-                                            <td><Link className="dropdown-item" to={'/edit-job'} state={item}>{item.Destination}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.JobId}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.Customer}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.CarrierDoc}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.HouseDoc}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.CustomsDoc}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.SalesPerson}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.Origin}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.Date}</Link></td>
+                                            <td><Link className="dropdown-item" to={userData?.canEditJob === true || admintoken ?'/edit-job':""} state={item}>{item.Destination}</Link></td>
                                         </tr>))}
                                 </tbody>
                             </table>
